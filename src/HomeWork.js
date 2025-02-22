@@ -8,12 +8,12 @@ import axios from 'axios';
 const groupTasksByDate = (tasks) => {
   // console.log(tasks); // 
   
-  return tasks.reduce((acc, task) => {
-    if (!acc[task.date]) {
-      acc[task.date] = [];
+  return tasks.reduce((date, task) => {
+    if (!date[task.date]) {
+      date[task.date] = [];
     }
-    acc[task.date].push(task);
-    return acc;
+    date[task.date].push(task);
+    return date;
   }, {});
 };
 
@@ -38,10 +38,7 @@ export default function HomeWork({ navigation }) {
   const loadAddHomeWork = () => {
     navigation.navigate('AddHomeWork');
   }
-  console.log("groupedTasks then:", tasksByDate)
-  console.log("groupedTasks now:");
-  console.log(Object.entries(tasksByDate));
-
+  
   return (
     <>
       <ScrollView>
@@ -76,7 +73,8 @@ export default function HomeWork({ navigation }) {
                 </View>
               ))}
             </View>
-          ))
+          )
+        )
         ) : (
           <Text style={{ textAlign: "center", marginTop: 20 }}>Нет задач</Text>
         )}

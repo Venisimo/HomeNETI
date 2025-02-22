@@ -132,5 +132,5 @@ def deletetask():
     conn.commit()
     return {"id": task_id, "message": f"Task {task_id} deleted"}, 200
 
-# if __name__ == '__main__':
-#     app.run(debug=True, host='0.0.0.0', port=5000)
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
