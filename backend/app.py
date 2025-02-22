@@ -123,7 +123,7 @@ def updatetask(task_id):
 
 @app.delete("/api/task")
 def deletetask():
-    data = request.get_json()
+    data = request.get_json() #fdsaf
     task_id = data["task_id"]
     cur.execute("""
                 DELETE FROM tasks
