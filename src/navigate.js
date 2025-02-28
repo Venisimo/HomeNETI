@@ -42,7 +42,14 @@ export default function Navigate() {
             },
           }}
         />
-        <Stack.Screen name="HomeWork" component={HomeWork} />
+        <Stack.Screen name="HomeWork" component={HomeWork} 
+          options={{
+            headerLeft: null,
+            headerStyle: { height: HEADER_HEIGHT },
+            headerTitleStyle: { paddingBottom: TEXT_HEIGHT, alignSelf: 'flex-start' },
+            headerTitle: "Домашние здания",
+          }}
+         />
         <Stack.Screen name="Schedule" component={Schedule} 
         options={{
           headerLeft: null,
@@ -69,7 +76,14 @@ export default function Navigate() {
         
         />
         <Stack.Screen name="check" component={check}></Stack.Screen>
-        <Stack.Screen name="AddHomeWork" component={AddHomeWork}></Stack.Screen>
+        <Stack.Screen name="AddHomeWork" component={AddHomeWork}
+          options={{
+            headerLeft: null,
+            headerStyle: { height: HEADER_HEIGHT },
+            headerTitleStyle: { paddingBottom: TEXT_HEIGHT, alignSelf: 'flex-start' },
+            headerTitle: "Добавление домашнего задания",
+          }}
+        ></Stack.Screen>
       </Stack.Navigator>
     </NavigationIndependentTree>
   );

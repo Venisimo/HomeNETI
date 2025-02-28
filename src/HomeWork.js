@@ -38,6 +38,13 @@ export default function HomeWork({ navigation }) {
   const loadAddHomeWork = () => {
     navigation.navigate('AddHomeWork');
   }
+
+  function getWeekDay(date) {
+    let days = ['Воскресенье', 'Понедельник', 
+      'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+  
+    return days[date.getDay()];
+  }
   
   return (
     <>
@@ -66,9 +73,9 @@ export default function HomeWork({ navigation }) {
                   </View> 
                   <View style={styles.HomeWorkBlockChild3}>
                     <Text style={styles.text3}>Изменить</Text>
-                    <Image source={require('../src/img/edit.png')}/>
-                    <Text style={styles.text3}>Отметить выполненным</Text>
-                    <Image source={require('../src/img/Galochka.png')}/>
+                    <Image style={styles.IconEdit} source={require('../src/img/edit.png')}/>
+                    <Text style={[styles.text3, styles.SubjName]}>Отметить выполненным</Text>
+                    <Image style={styles.IconNote} source={require('../src/img/Galochka.png')}/>
                   </View> 
                 </View>
               ))}
@@ -90,6 +97,17 @@ export default function HomeWork({ navigation }) {
 
 const styles = StyleSheet.create({
 
+  IconEdit: {
+    width: 18,
+    height: 18,
+    paddingBottom: 5,
+  },
+  IconNote: {
+    width: 15,
+    height: 15,
+    paddingBottom: 4,
+    marginLeft: 5,
+  },
   ButtonAdd: {
     backgroundColor: "#42e3a3",
     padding: 10,
@@ -104,7 +122,7 @@ const styles = StyleSheet.create({
   },
   ButtonText: {
     fontSize: 24,
-    color: "#fff", // Белый цвет текста
+    color: "#fff", 
   },
   DaysContainer: {
     display: "flex",
@@ -120,6 +138,9 @@ const styles = StyleSheet.create({
   },
   text3: {
     fontSize: 12, 
+    fontFamily: 'Stem',
+    fontWeight: 600,
+    fontStyle: 'normal',
   },
   DayMonth: {
     marginLeft: 'auto',
@@ -151,6 +172,8 @@ const styles = StyleSheet.create({
   date: {
     marginTop: 5,
     marginLeft: 25,
+    color: "#ccc",
+    fontWeight: 500,
   },
   HomeWorkBlockChild2: {
     display: "flex",
@@ -161,10 +184,11 @@ const styles = StyleSheet.create({
   HomeWorkBlockChild3: {
     display: "flex",
     flexDirection: "row",
-    marginTop: 10,
-    marginLeft: 90,
+    marginTop: 25,
+    marginBottom: 10,
+    marginLeft: 82,
   },
   SubjName: {
-    marginLeft: 25,
+    marginLeft: 10,
   }
 });
