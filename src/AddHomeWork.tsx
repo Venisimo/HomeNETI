@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from "react-native";
+import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert, Image, TouchableWithoutFeedback } from "react-native";
+import { RadioButton } from 'react-native-paper';
 import axios from "axios";
-import { ip } from "./ip"; // Укажи правильный IP сервера
+import { ip } from "./ip";
 
 export default function AddHomeWork() {
   const [task, setTask] = useState("");
@@ -9,6 +10,8 @@ export default function AddHomeWork() {
   const [date, setDate] = useState("");
   const [party, setParty] = useState("AVT-414");
 
+  const subjects = ["Математический анализ", "Физика", "Программирование", "Биология", "История"];
+  const dates = ["2025-03-10", "2025-03-11", "2025-03-12", "2025-03-13", "2025-03-14", "2025-03-15"];
   const handleAddHomework = () => {
     if (!task || !subject || !date) {
       Alert.alert("Ошибка", "Заполните все поля!");
@@ -29,6 +32,13 @@ export default function AddHomeWork() {
       });
   };
 
+  const [selectedValue, setSelectedValue] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibleDate, setModalVisibleDate] = useState(false);
+  const [choiseSubj, setChoiseSubj] = useState("Выбрать");
+  const [choiseDate, setChoiseDate] = useState("Выбрать");
+
+
   return (
     <View style={styles.container}>
       <View style={styles.UserBlock}>
@@ -39,6 +49,86 @@ export default function AddHomeWork() {
         
         <Text style={styles.date}>02.02.25</Text>                 
       </View>                                                         
+
+      <Modal visible={modalVisible} transparent={true}>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modal}>
+            {subjects.map((subject, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.radioItem}
+                onPress={() => setSelectedValue(subject)}
+              >
+                <RadioButton
+                  value={subject}
+                  status={selectedValue === subject ? "checked" : "unchecked"}
+                  onPress={() => 
+                    {
+                      setSelectedValue(subject);
+                    }}
+                  color="#00cc73"
+                  uncheckedColor="#00cc73" 
+                />
+                <Text>{subject}</Text>
+              </TouchableOpacity>
+                  
+            ))}
+              
+              <TouchableOpacity onPress={() => 
+                {
+                  if (selectedValue) {
+                    setChoiseSubj(selectedValue);
+                    setSubject(selectedValue);
+                  }
+                  setModalVisible(false);
+                }}>
+                <Text>Выбрать</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      <Modal visible={modalVisibleDate} transparent={true}>
+        <TouchableWithoutFeedback onPress={() => setModalVisibleDate(false)}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modal}>
+            {dates.map((date, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.radioItem}
+                onPress={() => setSelectedValue(date)}
+              >
+                <RadioButton
+                  value={date}
+                  status={selectedValue === date ? "checked" : "unchecked"}
+                  onPress={() => 
+                    {
+                      setSelectedValue(date);
+                    }}
+                  color="#00cc73"
+                  uncheckedColor="#00cc73" 
+                />
+                <Text>{date}</Text>
+              </TouchableOpacity>
+                  
+            ))}
+              
+              <TouchableOpacity onPress={() => 
+                {
+                  if (selectedValue) {
+                    setChoiseDate(selectedValue);
+                    setDate(selectedValue);
+                  }
+                  setModalVisibleDate(false);
+                }}>
+                <Text>Выбрать</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
 
       <TextInput
         multiline={true}
@@ -51,24 +141,17 @@ export default function AddHomeWork() {
       <View style={styles.SubjDateBlock}>
         <View style={styles.subj}>
           <Text style={styles.textLeft1}>Предмет:</Text>
-          <TextInput
-              style={styles.input2}
-              placeholder="Предмет"
-              value={subject}
-              onChangeText={setSubject}
-            />
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Text>{choiseSubj}</Text>
+          </TouchableOpacity>
         </View>
       
         <View style={styles.subj}>
           <Text style={styles.textLeft2}>Срок сдачи:</Text>
-            <TextInput
-            style={styles.input2}
-            placeholder="Дата (ГГГГ-ММ-ДД)"
-            value={date}
-            onChangeText={setDate}
-            />
+          <TouchableOpacity onPress={() => setModalVisibleDate(true)}>
+            <Text>{choiseDate}</Text>
+          </TouchableOpacity>
         </View>
-        
       </View>
       
 
@@ -80,6 +163,27 @@ export default function AddHomeWork() {
 }
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modal: {
+    width: 250,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+  },
+  radioItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  btnChoise: {
+
+  },
+
   container: {
     flex: 1,
     padding: 20,
@@ -97,14 +201,14 @@ const styles = StyleSheet.create({
   },
 
   textLeft1: {
-    marginTop: 10,
     marginLeft: 10,
     marginRight: 37,
+    fontWeight: 600,
   },
   textLeft2: {
-    marginTop: 10,
     marginLeft: 10,
     marginRight: 20,
+    fontWeight: 600,
   },
 
   SubjDateBlock: {
@@ -163,5 +267,6 @@ const styles = StyleSheet.create({
   subj: {
     flexDirection: "row",
     marginTop: 20,
+    marginBottom: 20,
   },
 });

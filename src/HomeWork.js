@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Footer } from "./Footer"; 
-import { ip } from "./ip"; // Импорт IP-адреса
+import { ip } from "./ip";
 import axios from 'axios';
 
 // Функция группировки задач по дате
 const groupTasksByDate = (tasks) => {
-  // console.log(tasks); // 
-  
   return tasks.reduce((date, task) => {
     if (!date[task.date]) {
       date[task.date] = [];
@@ -109,19 +107,25 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   ButtonAdd: {
-    backgroundColor: "#42e3a3",
-    padding: 10,
+    backgroundColor: "#00cc73",
     borderRadius: 50,
+    paddingBottom: 5,
     alignItems: "center",
     justifyContent: "center",
-    width: 50,
-    height: 50,
-    marginBottom: 20,
-    marginLeft: "auto",
-    marginRight: 40,
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    bottom: 70,
+    right: 20, 
+
+    elevation: 5, 
+    shadowColor: "#000", 
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
   },
   ButtonText: {
-    fontSize: 24,
+    fontSize: 30,
     color: "#fff", 
   },
   DaysContainer: {
