@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert, Image, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { RadioButton } from 'react-native-paper';
 import axios from "axios";
 import { ip } from "./ip";
@@ -40,6 +40,7 @@ export default function AddHomeWork() {
 
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
       <View style={styles.UserBlock}>
         <View style={styles.SurnameAvatar}>
@@ -75,7 +76,7 @@ export default function AddHomeWork() {
                   
             ))}
               
-              <TouchableOpacity onPress={() => 
+              <TouchableOpacity style={styles.btnChoise} onPress={() => 
                 {
                   if (selectedValue) {
                     setChoiseSubj(selectedValue);
@@ -115,7 +116,7 @@ export default function AddHomeWork() {
                   
             ))}
               
-              <TouchableOpacity onPress={() => 
+              <TouchableOpacity style={styles.btnChoise} onPress={() => 
                 {
                   if (selectedValue) {
                     setChoiseDate(selectedValue);
@@ -131,13 +132,13 @@ export default function AddHomeWork() {
       </Modal>
 
       <TextInput
-        multiline={true}
-        numberOfLines={4}
-        style={styles.input}
-        placeholder="Название задания"
-        value={task}
-        onChangeText={setTask}
-      />
+          multiline={true}
+          numberOfLines={4}
+          style={styles.input}
+          placeholder="Введите задание"
+          value={task}
+          onChangeText={setTask}
+        />
       <View style={styles.SubjDateBlock}>
         <View style={styles.subj}>
           <Text style={styles.textLeft1}>Предмет:</Text>
@@ -159,6 +160,7 @@ export default function AddHomeWork() {
         <Text>Добавить</Text>
       </TouchableOpacity>
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -181,7 +183,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   btnChoise: {
-
+    alignItems: "center",
+    marginTop: 20,
   },
 
   container: {

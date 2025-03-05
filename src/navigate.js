@@ -52,7 +52,7 @@ export default function Navigate() {
          />
         <Stack.Screen name="Schedule" component={Schedule} 
         options={{
-          headerLeft: null,
+          // headerLeft: null,
           headerStyle: { height: HEADER_HEIGHT },
           headerTitleStyle: { paddingBottom: TEXT_HEIGHT, alignSelf: 'flex-start' },
           headerTitle: "Расписание",
@@ -78,7 +78,7 @@ export default function Navigate() {
         <Stack.Screen name="check" component={check}></Stack.Screen>
         <Stack.Screen name="AddHomeWork" component={AddHomeWork}
           options={{
-            headerLeft: null,
+            // headerLeft: null,
             headerStyle: { height: HEADER_HEIGHT },
             headerTitleStyle: { paddingBottom: TEXT_HEIGHT, alignSelf: 'flex-start' },
             headerTitle: "Добавление домашнего задания",

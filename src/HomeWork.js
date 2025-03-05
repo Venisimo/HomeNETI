@@ -29,6 +29,7 @@ export default function HomeWork({ navigation }) {
     .then(response => {
       console.log("Ответ:", response.data);
       const groupedTasks = groupTasksByDate(response.data); // Группируем задачи по дате
+      console.log(response.data);
       setTasksByDate(groupedTasks);
     })
     .catch(error => console.error("Ошибка:", error));
