@@ -40,9 +40,9 @@ def get_homework():
 
     try:
         cur.execute("""
-            SELECT task_id, task, subject, date, party
+            SELECT task_id, task, subject, deadline, party, date, creator
             FROM tasks
-            WHERE party = %s;
+            WHERE party = %s ORDER BY deadline ASC;
         """, (party,))  # Передаём party в запрос
 
         results = cur.fetchall()  # Получаем все строки
@@ -53,10 +53,12 @@ def get_homework():
                     "task_id": row[0],
                     "task": row[1],
                     "subject": row[2],
-                    "date": row[3].strftime('%m-%d'),  # Форматируем дату
-                    "party": row[4]
+                    "deadline": row[3].strftime('%d.%m'),  # Форматируем дату
+                    "party": row[4],
+                    "date": row[5].strftime('%d.%m.%y'),
+                    "creator": row[6],
                 }
-                for row in results
+                for row in results 
             ]
             return jsonify(tasks)  # Возвращаем список JSON объектов
         else:
@@ -100,11 +102,13 @@ def settask():
         subject = data["subject"]
         date = data["date"]
         party = data["party"]
+        deadline = data["deadline"]
+        creator = data["creator"]
         
         cur.execute("""
-                    INSERT INTO tasks (task, subject, date, party)
-                    VALUES (%s, %s, %s, %s) RETURNING task_id;
-                    """, (task, subject, date, party))
+                    INSERT INTO tasks (task, subject, date, party, deadline, creator)
+                    VALUES (%s, %s, %s, %s, %s, %s) RETURNING task_id;
+                    """, (task, subject, date, party, deadline, creator))
         conn.commit()
 
         task_id = cur.fetchone()[0]
@@ -150,20 +154,16 @@ def deletetask():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.get("/api/user")
-def getuser():
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "data is required"}), 400  # Проверяем, что данные не переданы
+@app.get("/api/user/<int:id>")
+def getuser(id):  # Теперь id передается как аргумент
     try: 
-        user_id = data["user_id"]
         cur.execute("""
             SELECT name, surname, patronymic, party
             FROM users
             WHERE user_id = %s;
-        """, (user_id,))
+        """, (id,))  # Используем id, а не request.get_json()
 
-        results = cur.fetchall()  # Получаем все строки
+        results = cur.fetchall()
 
         if results:
             info = [
@@ -176,8 +176,11 @@ def getuser():
                 for row in results
             ]
             return jsonify(info)
+        else:
+            return jsonify({"error": "User not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

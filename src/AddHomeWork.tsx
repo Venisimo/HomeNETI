@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { RadioButton } from 'react-native-paper';
 import axios from "axios";
@@ -8,10 +8,51 @@ export default function AddHomeWork() {
   const [task, setTask] = useState("");
   const [subject, setSubject] = useState("");
   const [date, setDate] = useState("");
-  const [party, setParty] = useState("AVT-414");
+  const [party, setParty] = useState("");
+  const [deadline, setDeadline] = useState("");
+
+  const [id, setId] = useState(1);
+  const [creator, setCreator] = useState("Юзеров Ю. Ю.");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [patronymic, setPatronymic] = useState("");
 
   const subjects = ["Математический анализ", "Физика", "Программирование", "Биология", "История"];
   const dates = ["2025-03-10", "2025-03-11", "2025-03-12", "2025-03-13", "2025-03-14", "2025-03-15"];
+
+  useEffect(() => {
+    // const getId = () => {
+    //   setId(1);
+    // }
+    // getId();
+
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`http://${ip}:5000/api/user/${id}`);
+        console.log("Ответ:", response.data);
+
+        if (response.data.length > 0) {
+          setName(response.data[0].name);
+          setSurname(response.data[0].surname);
+          setPatronymic(response.data[0].patronymic);
+          setParty(response.data[0].party);
+        }
+      } catch (error) {
+        console.error("Ошибка:", error);
+      }
+    };
+
+    fetchUser(); // Вызываем асинхронную функцию
+
+    const today = new Date();
+    const dateSrc = today.toLocaleString('ru-RU', { year: 'numeric', month: 'numeric', day: 'numeric' });
+    
+    let dateDst = dateSrc.split(".").reverse().join("-");
+    setDate(dateDst);
+    // console.log(dateDst);
+
+  }, []); 
+
   const handleAddHomework = () => {
     if (!task || !subject || !date) {
       Alert.alert("Ошибка", "Заполните все поля!");
@@ -19,12 +60,14 @@ export default function AddHomeWork() {
     }
 
     axios
-      .post(`http://${ip}:5000/api/task`, { task, subject, date, party })
+      .post(`http://${ip}:5000/api/task`, { task, subject, date, party, deadline, creator })
       .then((response) => {
         Alert.alert("Успех", "Домашнее задание добавлено!");
         setTask("");
         setSubject("");
         setDate("");
+        setDeadline("");
+        setCreator("");
       })
       .catch((error) => {
         console.error("Ошибка при добавлении:", error);
@@ -39,16 +82,18 @@ export default function AddHomeWork() {
   const [choiseDate, setChoiseDate] = useState("Выбрать");
 
 
+
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
       <View style={styles.UserBlock}>
         <View style={styles.SurnameAvatar}>
           <Image style={styles.avatar} source={require('../src/img/Avatar.png')}/>
-          <Text style={styles.surname}>Surname N. F.</Text>
+          <Text style={styles.surname}>{surname} {name[0]}. {patronymic[0]}.</Text>
         </View>
         
-        <Text style={styles.date}>02.02.25</Text>                 
+        <Text style={styles.date}>{date[8]}{date[9]}.{date[5]}{date[6]}.{date[2]}{date[3]}</Text>                 
       </View>                                                         
 
       <Modal visible={modalVisible} transparent={true}>
@@ -120,7 +165,7 @@ export default function AddHomeWork() {
                 {
                   if (selectedValue) {
                     setChoiseDate(selectedValue);
-                    setDate(selectedValue);
+                    setDeadline(selectedValue);
                   }
                   setModalVisibleDate(false);
                 }}>

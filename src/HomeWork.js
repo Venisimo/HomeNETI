@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { ScrollView, Text, View, StyleSheet, Image, TouchableOpacity, Platform } from "react-native";
 import { Footer } from "./Footer"; 
 import { ip } from "./ip";
 import axios from 'axios';
 
 // Функция группировки задач по дате
 const groupTasksByDate = (tasks) => {
-  return tasks.reduce((date, task) => {
-    if (!date[task.date]) {
-      date[task.date] = [];
+  return tasks.reduce((deadline, task) => {
+    if (!deadline[task.deadline]) {
+      deadline[task.deadline] = [];
     }
-    date[task.date].push(task);
-    return date;
+    deadline[task.deadline].push(task);
+    return deadline;
   }, {});
 };
 
@@ -38,22 +38,28 @@ export default function HomeWork({ navigation }) {
     navigation.navigate('AddHomeWork');
   }
 
-  function getWeekDay(date) {
-    let days = ['Воскресенье', 'Понедельник', 
-      'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
-  
+  function getWeekDay(dateString) {
+    let days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+
+    let [day, month] = dateString.split('.').map(Number);
+
+    let currentYear = new Date().getFullYear();
+
+    let date = new Date(currentYear, month - 1, day);
+    
     return days[date.getDay()];
-  }
+}
+
   
   return (
     <>
       <ScrollView>
         {Object.keys(tasksByDate).length > 0 ? (
-          Object.entries(tasksByDate).map(([date, tasks]) => (
-            <View key={date}>
+          Object.entries(tasksByDate).map(([deadline, tasks]) => (
+            <View key={deadline}>
               <View style={styles.DaysContainer}>
-                <Text style={styles.text}>День недели</Text>  
-                <Text style={[styles.DayMonth, styles.text]}>{date}</Text>
+                <Text style={styles.text}>{getWeekDay(deadline)}</Text>  
+                <Text style={[styles.DayMonth, styles.text]}>{deadline}</Text>
               </View>
 
               {tasks.map((task, index) => (
@@ -61,20 +67,20 @@ export default function HomeWork({ navigation }) {
                   <View style={styles.HomeWorkBlockChild1}>
                     <Image style={styles.avatar} source={require('../src/img/Avatar.png')}/>
                     <View style={styles.SurnameHWtext}>
-                      <Text style={styles.text2}>Surname N. F.</Text>
+                      <Text style={styles.text2}>{task.creator}</Text>
                       <Text style={[styles.text3, styles.HWtext]}>{task.task}</Text>
                     </View>
                   </View>
-                  <Text style={[styles.text3, styles.date]}>02.02.25</Text> 
+                  <Text style={[styles.text3, styles.date]}>{task.date}</Text> 
                   <View style={styles.HomeWorkBlockChild2}>
                     <Text style={styles.text3}>Предмет: </Text>
                     <Text style={[styles.text3, styles.SubjName]}>{task.subject}</Text>
                   </View> 
                   <View style={styles.HomeWorkBlockChild3}>
-                    <Text style={styles.text3}>Изменить</Text>
+                    <Text style={[styles.text3, styles.downText]}>Изменить</Text>
                     <Image style={styles.IconEdit} source={require('../src/img/edit.png')}/>
-                    <Text style={[styles.text3, styles.SubjName]}>Отметить выполненным</Text>
-                    <Image style={styles.IconNote} source={require('../src/img/Galochka.png')}/>
+                    <Text style={[styles.text3, styles.downText]}>Отметить выполненным</Text>
+                    <Image style={styles.IconNote} resizeMode="contain" source={require('../src/img/Galochka.png')}/>
                   </View> 
                 </View>
               ))}
@@ -97,15 +103,15 @@ export default function HomeWork({ navigation }) {
 const styles = StyleSheet.create({
 
   IconEdit: {
-    width: 18,
-    height: 18,
+    width: Platform.OS === "ios" ? 18 : 15,
+    height: Platform.OS === "ios" ? 18 : 15,
     paddingBottom: 5,
   },
   IconNote: {
-    width: 15,
-    height: 15,
-    paddingBottom: 4,
-    marginLeft: 5,
+    width: Platform.OS === "ios" ? 15 : 12,
+    height: Platform.OS === "ios" ? 15 : 12,
+    paddingBottom: Platform.OS === "ios" ? 4 : 0,
+    marginLeft: Platform.OS === "ios" ? 4 : 4,
   },
   ButtonAdd: {
     backgroundColor: "#00cc73",
@@ -136,15 +142,16 @@ const styles = StyleSheet.create({
     marginLeft: 40,
   },
   text: {
-    fontSize: 26, 
+    fontSize: Platform.OS === "ios" ? 26 : 22, 
+    fontWeight: 600,
   },
   text2: {
-    fontSize: 24, 
+    fontSize: Platform.OS === "ios" ? 24 : 20, 
   },
   text3: {
     fontSize: 12, 
     fontFamily: 'Stem',
-    fontWeight: 600,
+    fontWeight: Platform.OS === "ios" ? 600 : 700,
     fontStyle: 'normal',
   },
   DayMonth: {
@@ -173,6 +180,8 @@ const styles = StyleSheet.create({
   },
   HWtext: {
     marginTop: 10,
+    color: 'red',
+    fontWeight: 500,
   },
   date: {
     marginTop: 5,
@@ -191,9 +200,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 25,
     marginBottom: 10,
-    marginLeft: 82,
+    marginLeft: Platform.OS === "ios" ? 82 : 72,
   },
   SubjName: {
     marginLeft: 10,
+    fontWeight: 500,
+  },
+  downText: {
+    marginLeft: Platform.OS === "ios" ? 5 : 5,
+    fontWeight: Platform.OS === "ios" ? 600 : 700,
   }
 });

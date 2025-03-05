@@ -12,7 +12,7 @@ export const ButtonService: React.FC<ButtonServiceProps> = ({ children, onPress,
     <View style={styles.button}>
       <TouchableOpacity style={styles.touchable} onPress={onPress}>
         {imageSource && <Image source={imageSource} style={styles.image} />}
-        <Text>{children}</Text>
+        <Text style={styles.text}>{children}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -39,5 +39,9 @@ const styles = StyleSheet.create({
     width: 30, // Ширина изображения
     height: 30, // Высота изображения
     // marginRight: 8, // Отступ между изображением и текстом
+  },
+  text: {
+    fontSize: Platform.OS === "ios" ? 12 : 10,
+    textAlign: 'center'
   },
 });
