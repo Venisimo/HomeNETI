@@ -4,7 +4,8 @@ import { RadioButton } from 'react-native-paper';
 import axios from "axios";
 import { ip } from "./ip";
 
-export default function AddHomeWork() {
+
+export default function AddHomeWork({ navigation }) {
   const [task, setTask] = useState("");
   const [subject, setSubject] = useState("");
   const [date, setDate] = useState("");
@@ -54,7 +55,7 @@ export default function AddHomeWork() {
   }, []); 
 
   const handleAddHomework = () => {
-    if (!task || !subject || !date) {
+    if (!task || !subject || !date || !deadline) {
       Alert.alert("Ошибка", "Заполните все поля!");
       return;
     }
@@ -62,7 +63,9 @@ export default function AddHomeWork() {
     axios
       .post(`http://${ip}:5000/api/task`, { task, subject, date, party, deadline, creator })
       .then((response) => {
-        Alert.alert("Успех", "Домашнее задание добавлено!");
+        Alert.alert("Успех", "Домашнее задание добавлено!", [
+          { text: "OK", onPress: () => navigation.navigate('HomeWork') }
+      ]);
         setTask("");
         setSubject("");
         setDate("");

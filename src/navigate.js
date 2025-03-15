@@ -44,7 +44,9 @@ export default function Navigate() {
         />
         <Stack.Screen name="HomeWork" component={HomeWork} 
           options={{
-            headerLeft: Platform.OS === "ios" ? null : undefined,
+            headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45} :  { marginTop: 0},
+            headerBackTitle: "",
+            headerTintColor: "black",
             headerStyle: { height: HEADER_HEIGHT },
             headerTitleStyle: { paddingBottom: TEXT_HEIGHT, alignSelf: 'flex-start' },
             headerTitle: "Домашние здания",
@@ -78,9 +80,11 @@ export default function Navigate() {
         <Stack.Screen name="check" component={check}></Stack.Screen>
         <Stack.Screen name="AddHomeWork" component={AddHomeWork}
           options={{
-            headerLeft: Platform.OS === "ios" ? null : undefined,
+            headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45} :  { marginTop: 0},
+            headerBackTitle: "",
+            headerTintColor: "black",
             headerStyle: { height: HEADER_HEIGHT },
-            headerTitleStyle: { paddingBottom: TEXT_HEIGHT, alignSelf: 'flex-start' },
+            headerTitleStyle: { paddingBottom: TEXT_HEIGHT, alignSelf: 'flex-start', fontSize: Platform.OS === "ios" ? 13 : 18 },
             headerTitle: "Добавление домашнего задания",
           }}
         ></Stack.Screen>
