@@ -19,17 +19,9 @@ cur.execute("CREATE TABLE IF NOT EXISTS users (user_id SERIAL PRIMARY KEY, name 
 conn.commit()
 cur.execute("CREATE TABLE IF NOT EXISTS tasks (task_id SERIAL PRIMARY KEY, creator TEXT, task TEXT, subject TEXT, deadline DATE, party TEXT, date DATE);")
 conn.commit()
+cur.execute("CREATE TABLE IF NOT EXISTS tasks (task_id SERIAL PRIMARY KEY, creator TEXT, task TEXT, subject TEXT, deadline DATE, party TEXT, date DATE);")
+conn.commit()
 
-# # Пример маршрута
-# @app.route('/api/hello', methods=['GET'])
-# def hello():
-#     return jsonify({"message": "Hello from Flask!"})
-
-# Пример POST-запроса
-# @app.route('/api/data', methods=['POST'])
-# def receive_data():
-#     data = request.json  # Получаем JSON-данные
-#     return jsonify({"received": data})
 
 @app.get("/api/homeWorkGet")
 def get_homework():
