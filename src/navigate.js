@@ -3,7 +3,6 @@ import { NavigationContainer, NavigationIndependentTree } from "@react-navigatio
 import HomeWork from "./HomeWork";
 import Services from "./Services";
 import Schedule from "./Schedule";
-import check from "./check";
 import AddHomeWork from "./AddHomeWork";
 import { ScrollView, Text, View, StyleSheet, Image, Platform } from "react-native";
 import { HeaderServiceAndroid } from "../src/HeaderServiceAndroid";
@@ -77,7 +76,6 @@ export default function Navigate() {
         }}
         
         />
-        <Stack.Screen name="check" component={check}></Stack.Screen>
         <Stack.Screen name="AddHomeWork" component={AddHomeWork}
           options={{
             headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45} :  { marginTop: 0},

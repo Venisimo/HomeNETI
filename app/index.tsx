@@ -1,6 +1,10 @@
 import React from "react";
 import Navigate from "../src/navigate";
-//test
+import { NavigationContainer, NavigationIndependentTree } from "@react-navigation/native";
 export default function Index() {
-  return <Navigate />;
+  return (
+    <NavigationIndependentTree>
+      <Navigate />;
+    </NavigationIndependentTree>
+  )
 }
