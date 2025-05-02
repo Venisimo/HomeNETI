@@ -3,14 +3,15 @@ import { ScrollView, Text, View, StyleSheet, Image } from "react-native";
 import { Header } from "./TitleServices";
 import { ButtonService } from "./Button";
 import { Footer } from "./Footer"; 
+import { useNavigation } from '@react-navigation/native';
 
-export default function Services({ navigation }) {
+export default function Services() {
+  const navigation = useNavigation();
+
   const loadHomeWork = () => {
-    navigation.navigate('HomeWork');
-  }
-  const loadcheck = () => {
-    navigation.navigate('check');
-  }
+    navigation.getParent()?.navigate('HomeWork');
+  };
+
 
   return (
     <>
@@ -38,12 +39,12 @@ export default function Services({ navigation }) {
             <ButtonService imageSource={require("../src/img/reviews.png")}>Отзывы и предложения</ButtonService>
           </View>
           <View style={styles.buttonContainer}>
-            <ButtonService onPress={loadcheck} imageSource={require("../src/img/wifi.png")}>Wi-Fi НГТУ</ButtonService>
+            <ButtonService imageSource={require("../src/img/wifi.png")}>Wi-Fi НГТУ</ButtonService>
             <ButtonService onPress={loadHomeWork} imageSource={require("../src/img/HomeWork.png")}>Домашка</ButtonService>
           </View>
         </View>
       </ScrollView>
-      <Footer navigation={navigation} /> 
+      {/* <Footer navigation={navigation} />  */}
     </>
   );
 }

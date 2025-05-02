@@ -1,101 +1,209 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View, StyleSheet, Image, TouchableOpacity, Platform } from "react-native";
-import { Footer } from "./Footer"; 
+import { ScrollView, Text, View, StyleSheet, Image, TouchableOpacity, Platform, Dimensions } from "react-native";
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { ip } from "./ip";
 import axios from 'axios';
 
-// Функция группировки задач по дате
+// Группировка по дате
 const groupTasksByDate = (tasks) => {
-  return tasks.reduce((deadline, task) => {
-    if (!deadline[task.deadline]) {
-      deadline[task.deadline] = [];
+  return tasks.reduce((acc, task) => {
+    const dateKey = task.deadline || "Без срока";
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
     }
-    deadline[task.deadline].push(task);
-    return deadline;
+    acc[dateKey].push(task);
+    return acc;
   }, {});
 };
 
-export default function HomeWork({ navigation }) {
-  const [tasksByDate, setTasksByDate] = useState({}); // Состояние для хранения группированных задач
+// Получение задач
+const useTasks = () => {
+  const [tasksByDate, setTasksByDate] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  const fetchTasks = () => {
     axios.get(`http://${ip}:5000/api/homeWorkGet`, {
       params: { party: 'AVT-414' }
     })
-    .then(response => {
-      console.log("Ответ:", response.data);
-      const groupedTasks = groupTasksByDate(response.data); // Группируем задачи по дате
-      console.log(response.data);
-      setTasksByDate(groupedTasks);
-    })
-    .catch(error => console.error("Ошибка:", error));
-  };
-  const loadAddHomeWork = () => {
-    navigation.navigate('AddHomeWork');
+      .then(response => {
+        const grouped = groupTasksByDate(response.data);
+        setTasksByDate(grouped);
+      })
+      .catch(error => {
+        console.error("Ошибка:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  return { tasksByDate, isLoading };
+};
+
+
+const WithDeadline = ({ tasksByDate, isLoading }) => {
+
+  if (isLoading) {
+    return <Text style={{ textAlign: "center", marginTop: 20 }}>Загрузка...</Text>;
   }
 
   function getWeekDay(dateString) {
     let days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
-
+  
     let [day, month] = dateString.split('.').map(Number);
-
+  
     let currentYear = new Date().getFullYear();
-
+  
     let date = new Date(currentYear, month - 1, day);
     
     return days[date.getDay()];
-}
+  };
 
-  
   return (
     <>
       <ScrollView>
         {Object.keys(tasksByDate).length > 0 ? (
-          Object.entries(tasksByDate).map(([deadline, tasks]) => (
-            <View key={deadline}>
-              <View style={styles.DaysContainer}>
-                <Text style={styles.text}>{getWeekDay(deadline)}</Text>  
-                <Text style={[styles.DayMonth, styles.text]}>{deadline}</Text>
-              </View>
-
-              {tasks.map((task, index) => (
-                <View key={index} style={styles.HomeWorkBlock}>
-                  <View style={styles.HomeWorkBlockChild1}>
-                    <Image style={styles.avatar} source={require('../src/img/Avatar.png')}/>
-                    <View style={styles.SurnameHWtext}>
-                      <Text style={styles.text2}>{task.creator}</Text>
-                      <Text style={[styles.text3, styles.HWtext]}>{task.task}</Text>
-                    </View>
+          Object.entries(tasksByDate).map(([deadline, tasks]) => 
+            {
+              if (deadline == "Без срока") return null;
+              return (
+                <View key={deadline}>
+                  <View style={styles.DaysContainer}>
+                    <Text style={styles.text}>{getWeekDay(deadline)}</Text>  
+                    <Text style={[styles.DayMonth, styles.text]}>{deadline}</Text>
                   </View>
-                  <Text style={[styles.text3, styles.date]}>{task.date}</Text> 
-                  <View style={styles.HomeWorkBlockChild2}>
-                    <Text style={styles.text3}>Предмет: </Text>
-                    <Text style={[styles.text3, styles.SubjName]}>{task.subject}</Text>
-                  </View> 
-                  <View style={styles.HomeWorkBlockChild3}>
-                    <Text style={[styles.text3, styles.downText]}>Изменить</Text>
-                    <Image style={styles.IconEdit} source={require('../src/img/edit.png')}/>
-                    <Text style={[styles.text3, styles.downText]}>Отметить выполненным</Text>
-                    <Image style={styles.IconNote} resizeMode="contain" source={require('../src/img/Galochka.png')}/>
-                  </View> 
+    
+                  {tasks.map((task, index) => (
+                    <View key={index} style={styles.HomeWorkBlock}>
+                      <View style={styles.HomeWorkBlockChild1}>
+                        <Image style={styles.avatar} source={require('../src/img/Avatar.png')}/>
+                        <View style={styles.SurnameHWtext}>
+                          <Text style={styles.text2}>{task.creator}</Text>
+                          <Text style={[styles.text3, styles.HWtext]}>{task.task}</Text>
+                        </View>
+                      </View>
+                      <Text style={[styles.text3, styles.date]}>{task.date}</Text> 
+                      <View style={styles.HomeWorkBlockChild2}>
+                        <Text style={styles.text3}>Предмет: </Text>
+                        <Text style={[styles.text3, styles.SubjName]}>{task.subject}</Text>
+                      </View> 
+                      <View style={styles.HomeWorkBlockChild3}>
+                        <Text style={[styles.text3, styles.downText]}>Изменить</Text>
+                        <Image style={styles.IconEdit} source={require('../src/img/edit.png')}/>
+                        <Text style={[styles.text3, styles.downText]}>Отметить выполненным</Text>
+                        <Image style={styles.IconNote} resizeMode="contain" source={require('../src/img/Galochka.png')}/>
+                      </View> 
+                    </View>
+                  ))}
                 </View>
-              ))}
-            </View>
-          )
+              )
+          }
         )
         ) : (
           <Text style={{ textAlign: "center", marginTop: 20 }}>Нет задач</Text>
         )}
       </ScrollView>
+    </>
+  );
+}
+
+const WithoutDeadline = ({ tasksByDate, isLoading }) => {
+
+  if (isLoading) {
+    return <Text style={{ textAlign: "center", marginTop: 20 }}>Загрузка...</Text>;
+  }
+
+  return (
+    <>
+      <ScrollView>
+        {Object.keys(tasksByDate).length > 0 ? (
+          Object.entries(tasksByDate).map(([deadline, tasks]) => 
+            {
+              if (deadline != "Без срока") return null;
+              return (
+                <View key={deadline}>
+                  {tasks.map((task, index) => (
+                    <View key={index} style={styles.HomeWorkBlock}>
+                      <View style={styles.HomeWorkBlockChild1}>
+                        <Image style={styles.avatar} source={require('../src/img/Avatar.png')}/>
+                        <View style={styles.SurnameHWtext}>
+                          <Text style={styles.text2}>{task.creator}</Text>
+                          <Text style={[styles.text3, styles.HWtext]}>{task.task}</Text>
+                        </View>
+                      </View>
+                      <Text style={[styles.text3, styles.date]}>{task.date}</Text> 
+                      <View style={styles.HomeWorkBlockChild2}>
+                        <Text style={styles.text3}>Предмет: </Text>
+                        <Text style={[styles.text3, styles.SubjName]}>{task.subject}</Text>
+                      </View> 
+                      <View style={styles.HomeWorkBlockChild3}>
+                        <Text style={[styles.text3, styles.downText]}>Изменить</Text>
+                        <Image style={styles.IconEdit} source={require('../src/img/edit.png')}/>
+                        <Text style={[styles.text3, styles.downText]}>Отметить выполненным</Text>
+                        <Image style={styles.IconNote} resizeMode="contain" source={require('../src/img/Galochka.png')}/>
+                      </View> 
+                    </View>
+                  ))}
+                </View>
+              )
+          }
+        )
+        ) : (
+          <Text style={{ textAlign: "center", marginTop: 20 }}>Нет задач</Text>
+        )}
+      </ScrollView>
+    </>
+  );
+};
+
+export default function TabHomeWork({ navigation }) {
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'first', title: 'Со сроком' },
+    { key: 'second', title: 'Без срока' },
+  ]);
+  const { tasksByDate, isLoading } = useTasks();
+  const loadAddHomeWork = () => {
+    navigation.navigate('AddHomeWork');
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <TabView
+          navigationState={{ index, routes }}
+          renderScene={({ route }) => {
+            switch (route.key) {
+              case 'first':
+                return <WithDeadline tasksByDate={tasksByDate} isLoading={isLoading} />;
+              case 'second':
+                return <WithoutDeadline tasksByDate={tasksByDate} isLoading={isLoading} />;
+              default:
+                return null;
+            }
+          }}
+          onIndexChange={setIndex}
+          initialLayout={{ width: Dimensions.get('window').width }}
+          renderTabBar={props => (
+            <TabBar
+              {...props}
+              indicatorStyle={{ backgroundColor: '#29BE87', height: 3 }}
+              style={{ backgroundColor: '#f2f2f2' }}
+              labelStyle={{
+                color: '#000000',
+                fontSize: 14,
+                fontWeight: 'bold',
+                textTransform: 'none'
+              }}
+              activeColor="#29BE87"
+              inactiveColor="#000000"
+            />
+          )}
+          swipeEnabled={true}
+        />
       <TouchableOpacity style={styles.ButtonAdd} onPress={loadAddHomeWork}>
         <Text style={styles.ButtonText}>+</Text>
       </TouchableOpacity>
-      <Footer navigation={navigation} /> 
-    </>
+    </View>
   );
 }
 

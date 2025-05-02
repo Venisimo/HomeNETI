@@ -53,7 +53,7 @@ def get_homework():
                     "task_id": row[0],
                     "task": row[1],
                     "subject": row[2],
-                    "deadline": row[3].strftime('%d.%m'),  # Форматируем дату
+                    "deadline": row[3].strftime('%d.%m') if row[3] else None,  # Форматируем дату
                     "party": row[4],
                     "date": row[5].strftime('%d.%m.%y'),
                     "creator": row[6],

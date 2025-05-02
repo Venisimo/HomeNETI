@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert, Image, 
-  TouchableWithoutFeedback, Keyboard, Platform, ScrollView, Dimensions  } from "react-native";
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+  TouchableWithoutFeedback, Keyboard, Platform, ScrollView,  } from "react-native";
 
 let data = {
   typeLesson: ["Лекция", "Практика"],
@@ -15,7 +14,8 @@ const lessons = data.Subj.map((subj, index) => ({
   textHW: data.textHW[index],
 }));
 
-const FirstRoute = () => {
+
+const Schedule = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [ModalSubj, setModalSubj] = useState('');
@@ -98,59 +98,6 @@ const FirstRoute = () => {
     </>
   );
 };
-
-const SecondRoute = () => (
-  <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />
-);
-
-const ThirdRoute = () => (
-  <View style={[styles.scene, { backgroundColor: '#4caf50' }]} />
-);
-
-const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-  third: ThirdRoute,
-});
-
-export default function Schedule() {
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    { key: 'first', title: 'Неделя 1' },
-    { key: 'second', title: 'Неделя 2' },
-    { key: 'third', title: 'Неделя 3' },
-  ]);
-
-  return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={{ width: Dimensions.get('window').width }}
-      renderTabBar={props => (
-        <TabBar
-          {...props}
-          indicatorStyle={{ 
-            backgroundColor: '#29BE87', // Цвет индикатора (подчеркивания)
-            height: 3 // Высота индикатора
-          }}
-          style={{ 
-            backgroundColor: '#f2f2f2', // Фон TabBar
-          }}
-          labelStyle={{
-            color: '#000000', // Цвет текста
-            fontSize: 14, // Размер шрифта
-            fontWeight: 'bold', // Жирность
-            textTransform: 'none' // Регистр текста (none - как есть, uppercase - заглавные)
-          }}
-          activeColor="#29BE87" // Цвет активной вкладки
-          inactiveColor="#000000" // Цвет неактивной вкладки
-        />
-      )}
-      swipeEnabled={true}
-  />
-  );
-}
 
 const styles = StyleSheet.create({
   textSubjModal: {
@@ -322,3 +269,5 @@ const styles = StyleSheet.create({
     marginLeft: 25,
   }
 });
+
+export default Schedule;
