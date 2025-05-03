@@ -11,41 +11,47 @@ export default function Services() {
   const loadHomeWork = () => {
     navigation.getParent()?.navigate('HomeWork');
   };
+  const loadGroup = () => {
+    navigation.getParent()?.navigate('Group');
+  };
+  const loadHWcomments = () => {
+    navigation.getParent()?.navigate('HWcomments');
+  };
 
 
   return (
     <>
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <Header />
-        <View style={styles.container}>
-          <View style={styles.buttonContainer}>
-            <ButtonService imageSource={require("../src/img/calanderIcon.png")}>Календарь</ButtonService>
-            <ButtonService imageSource={require("../src/img/servicesIcon.png")}>Услуги</ButtonService>
-            <ButtonService imageSource={require("../src/img/events.png")}>События</ButtonService>
-          </View>
-          <View style={styles.buttonContainer}>
-            <ButtonService imageSource={require("../src/img/polls.png")}>Опросы</ButtonService>
-            <ButtonService imageSource={require("../src/img/notes.png")}>Заметки</ButtonService>
-            <ButtonService imageSource={require("../src/img/shop.png")}>Магазин</ButtonService>
-          </View>
-          <View style={styles.buttonContainer}>
-            <ButtonService imageSource={require("../src/img/navigation.png")}>Навигация</ButtonService>
-            <ButtonService imageSource={require("../src/img/library.png")}>Библиотека</ButtonService>
-            <ButtonService imageSource={require("../src/img/problems.png")}>Проблемы</ButtonService>
-          </View>
-          <View style={styles.buttonContainer}>
-            <ButtonService imageSource={require("../src/img/pass.png")}>Пропуск</ButtonService>
-            <ButtonService imageSource={require("../src/img/bugs.png")}>Отчеты об ошибках</ButtonService>
-            <ButtonService imageSource={require("../src/img/reviews.png")}>Отзывы и предложения</ButtonService>
-          </View>
-          <View style={styles.buttonContainer}>
-            <ButtonService imageSource={require("../src/img/wifi.png")}>Wi-Fi НГТУ</ButtonService>
-            <ButtonService onPress={loadHomeWork} imageSource={require("../src/img/HomeWork.png")}>Домашка</ButtonService>
-          </View>
+    <ScrollView contentContainerStyle={styles.scrollView}>
+      <Header />
+      <View style={styles.container}>
+        <View style={styles.buttonContainer}>
+          <ButtonService imageSource={require("../src/img/calanderIcon.png")}>Календарь</ButtonService>
+          <ButtonService onPress={loadGroup} imageSource={require("../src/img/groupIcon.png")}>Моя группа</ButtonService> {/* Новая кнопка */}
+          <ButtonService imageSource={require("../src/img/servicesIcon.png")}>Услуги</ButtonService>
         </View>
-      </ScrollView>
-      {/* <Footer navigation={navigation} />  */}
-    </>
+        <View style={styles.buttonContainer}>
+          <ButtonService imageSource={require("../src/img/events.png")}>События</ButtonService>
+          <ButtonService imageSource={require("../src/img/polls.png")}>Опросы</ButtonService>
+          <ButtonService imageSource={require("../src/img/notes.png")}>Заметки</ButtonService>
+        </View>
+        <View style={styles.buttonContainer}>
+          <ButtonService imageSource={require("../src/img/shop.png")}>Магазин</ButtonService>
+          <ButtonService imageSource={require("../src/img/navigation.png")}>Навигация</ButtonService>
+          <ButtonService imageSource={require("../src/img/library.png")}>Библиотека</ButtonService>
+        </View>
+        <View style={styles.buttonContainer}>
+          <ButtonService imageSource={require("../src/img/problems.png")}>Проблемы</ButtonService>
+          <ButtonService imageSource={require("../src/img/pass.png")}>Пропуск</ButtonService>
+          <ButtonService imageSource={require("../src/img/bugs.png")}>Отчеты об ошибках</ButtonService>
+        </View>
+        <View style={styles.buttonContainer}>
+          <ButtonService imageSource={require("../src/img/reviews.png")}>Отзывы и предложения</ButtonService>
+          <ButtonService onPress={loadHWcomments} imageSource={require("../src/img/wifi.png")}>КОММЕНТЫ</ButtonService>
+          <ButtonService onPress={loadHomeWork} imageSource={require("../src/img/HomeWork.png")}>Домашка</ButtonService>
+        </View>
+      </View>
+    </ScrollView>
+  </>
   );
 }
 

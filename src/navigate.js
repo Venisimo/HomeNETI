@@ -9,6 +9,9 @@ import AddHomeWork from "./AddHomeWork";
 import { Text, View, StyleSheet, Image, Platform } from "react-native";
 import { HeaderServiceAndroid } from "../src/HeaderServiceAndroid";
 import { HeaderServiceIOS } from "../src/HeaderServiceIOS";
+import AuthScreen from "../src/Auth";
+import Group from "../src/Group";
+import HWcomments from "../src/HomeWorkComments";
 
 const HEADER_HEIGHT = Platform.OS === "ios" ? 44 : 56;
 const TEXT_HEIGHT = Platform.OS === "ios" ? 64 : 0;
@@ -61,7 +64,48 @@ function MainTabs() {
             Platform.OS === "android" ? (
               <Image 
                 source={require('../src/img/logo.png')} 
-                style={{ width: 40, height: 40, marginLeft: 10, marginRight: 10 }}
+                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 10  }}
+              />
+            ) : null
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={{
+          headerTitle: "Авторизация",
+          tabBarStyle: {
+            height: 55, // сделать панель ниже и выше
+            paddingBottom: 10, // добавить отступ снизу
+            paddingTop: 10,
+          },
+          tabBarShowLabel: false, // убрать текст под иконками
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={
+                focused
+                  ? require('../src/img/footer/profileAcitve.png')
+                  : require('../src/img/footer/profile.png')
+              }
+              style={styles.footerIcon}
+            />
+          ),
+          headerRight: () => (
+            Platform.OS === "android" ? (
+              <Image 
+                source={require('../src/img/settings.png')}
+                style={{ width: 30, height: 30, marginRight: 15 }}
+              />
+            ) : (
+              <HeaderServiceIOS />
+            )
+          ),
+          headerLeft: () => (
+            Platform.OS === "android" ? (
+              <Image 
+                source={require('../src/img/logo.png')} 
+                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 10 }}
               />
             ) : null
           ),
@@ -102,7 +146,7 @@ function MainTabs() {
             Platform.OS === "android" ? (
               <Image 
                 source={require('../src/img/logo.png')} 
-                style={{ width: 40, height: 40, marginLeft: 10, marginRight: 10 }}
+                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 10 }}
               />
             ) : null
           ),
@@ -148,6 +192,38 @@ export default function Navigate() {
               fontSize: Platform.OS === "ios" ? 13 : 18 
             },
             headerTitle: "Добавление домашнего задания",
+          }}
+        />
+        <Stack.Screen 
+          name="Group" 
+          component={Group}
+          options={{
+            headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45 } : { marginTop: 0 },
+            headerBackTitle: "",
+            headerTintColor: "black",
+            headerStyle: { height: HEADER_HEIGHT },
+            headerTitleStyle: { 
+              paddingBottom: TEXT_HEIGHT, 
+              alignSelf: 'flex-start', 
+              fontSize: Platform.OS === "ios" ? 18 : 20 
+            },
+            headerTitle: "Моя группа",
+          }}
+        />
+        <Stack.Screen 
+          name="HWcomments" 
+          component={HWcomments}
+          options={{
+            headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45 } : { marginTop: 0 },
+            headerBackTitle: "",
+            headerTintColor: "black",
+            headerStyle: { height: HEADER_HEIGHT },
+            headerTitleStyle: { 
+              paddingBottom: TEXT_HEIGHT, 
+              alignSelf: 'flex-start', 
+              fontSize: Platform.OS === "ios" ? 18 : 20 
+            },
+            headerTitle: "Домашнее задание",
           }}
         />
       </Stack.Navigator>
