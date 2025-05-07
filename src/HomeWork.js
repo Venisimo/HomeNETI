@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View, StyleSheet, Image, TouchableOpacity, Platform, Dimensions } from "react-native";
+import { RCTView, ScrollView, Text, View, StyleSheet, Image, TouchableOpacity, Platform, Dimensions } from "react-native";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { ip } from "./ip";
 import axios from 'axios';
+import RedactorsComponents from './RedactorsComponents';
 
 // Группировка по дате
 const groupTasksByDate = (tasks) => {
@@ -15,6 +16,9 @@ const groupTasksByDate = (tasks) => {
     return acc;
   }, {});
 };
+
+//роль
+let role = 1;
 
 // Получение задач
 const useTasks = () => {
@@ -88,8 +92,7 @@ const WithDeadline = ({ tasksByDate, isLoading }) => {
                         <Text style={[styles.text3, styles.SubjName]}>{task.subject}</Text>
                       </View> 
                       <View style={styles.HomeWorkBlockChild3}>
-                        <Text style={[styles.text3, styles.downText]}>Изменить</Text>
-                        <Image style={styles.IconEdit} source={require('../src/img/edit.png')}/>
+                        {role == 0 ? "" : RedactorsComponents[0]()}
                         <Text style={[styles.text3, styles.downText]}>Отметить выполненным</Text>
                         <Image style={styles.IconNote} resizeMode="contain" source={require('../src/img/Galochka.png')}/>
                       </View> 
@@ -137,10 +140,13 @@ const WithoutDeadline = ({ tasksByDate, isLoading }) => {
                         <Text style={[styles.text3, styles.SubjName]}>{task.subject}</Text>
                       </View> 
                       <View style={styles.HomeWorkBlockChild3}>
-                        <Text style={[styles.text3, styles.downText]}>Изменить</Text>
-                        <Image style={styles.IconEdit} source={require('../src/img/edit.png')}/>
+                        {role == 0 ? "" : RedactorsComponents[0]()}
                         <Text style={[styles.text3, styles.downText]}>Отметить выполненным</Text>
                         <Image style={styles.IconNote} resizeMode="contain" source={require('../src/img/Galochka.png')}/>
+                      </View> 
+                      <View style={styles.HomeWorkBlockChild3}>
+                        <Text style={[styles.text3, styles.downText]}>Назначить свой срок</Text>
+                        <Image style={styles.IconCalendar} resizeMode="contain" source={require('../src/img/calanderIcon.png')}/>
                       </View> 
                     </View>
                   ))}
@@ -156,16 +162,13 @@ const WithoutDeadline = ({ tasksByDate, isLoading }) => {
   );
 };
 
-export default function TabHomeWork({ navigation }) {
+export default function TabHomeWork() {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'first', title: 'Со сроком' },
     { key: 'second', title: 'Без срока' },
   ]);
   const { tasksByDate, isLoading } = useTasks();
-  const loadAddHomeWork = () => {
-    navigation.navigate('AddHomeWork');
-  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -200,9 +203,7 @@ export default function TabHomeWork({ navigation }) {
           )}
           swipeEnabled={true}
         />
-      <TouchableOpacity style={styles.ButtonAdd} onPress={loadAddHomeWork}>
-        <Text style={styles.ButtonText}>+</Text>
-      </TouchableOpacity>
+        <View>{role == 0 ? "" : RedactorsComponents[1]()}</View>
     </View>
   );
 }
@@ -218,6 +219,12 @@ const styles = StyleSheet.create({
   IconNote: {
     width: Platform.OS === "ios" ? 15 : 12,
     height: Platform.OS === "ios" ? 15 : 12,
+    paddingBottom: Platform.OS === "ios" ? 4 : 0,
+    marginLeft: Platform.OS === "ios" ? 4 : 4,
+  },
+  IconCalendar: {
+    width: Platform.OS === "ios" ? 20 : 12,
+    height: Platform.OS === "ios" ? 20 : 12,
     paddingBottom: Platform.OS === "ios" ? 4 : 0,
     marginLeft: Platform.OS === "ios" ? 4 : 4,
   },
@@ -261,6 +268,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Stem',
     fontWeight: Platform.OS === "ios" ? 600 : 700,
     fontStyle: 'normal',
+    // marginLeft: 20,
   },
   DayMonth: {
     marginLeft: 'auto',
@@ -301,12 +309,13 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     marginTop: 10,
+    marginBottom: 20,
     marginLeft: 100,
   },
   HomeWorkBlockChild3: {
     display: "flex",
     flexDirection: "row",
-    marginTop: 25,
+    marginTop: 10,
     marginBottom: 10,
     marginLeft: Platform.OS === "ios" ? 82 : 72,
   },
@@ -315,7 +324,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
   downText: {
-    marginLeft: Platform.OS === "ios" ? 5 : 5,
+    marginLeft: role === 0 ? 16 : 5,
     fontWeight: Platform.OS === "ios" ? 600 : 700,
   }
 });

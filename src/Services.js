@@ -14,10 +14,14 @@ export default function Services() {
   const loadGroup = () => {
     navigation.getParent()?.navigate('Group');
   };
+  const loadCalendar = () => {
+    navigation.getParent()?.navigate('Calendar');
+  };
+   
   const loadHWcomments = () => {
     navigation.getParent()?.navigate('HWcomments');
   };
-
+   
 
   return (
     <>
@@ -25,8 +29,8 @@ export default function Services() {
       <Header />
       <View style={styles.container}>
         <View style={styles.buttonContainer}>
-          <ButtonService imageSource={require("../src/img/calanderIcon.png")}>Календарь</ButtonService>
-          <ButtonService onPress={loadGroup} imageSource={require("../src/img/groupIcon.png")}>Моя группа</ButtonService> {/* Новая кнопка */}
+          <ButtonService onPress={loadCalendar} imageSource={require("../src/img/calanderIcon.png")}>Календарь</ButtonService>
+          <ButtonService onPress={loadGroup} imageSource={require("../src/img/groupIcon.png")}>Моя группа</ButtonService>
           <ButtonService imageSource={require("../src/img/servicesIcon.png")}>Услуги</ButtonService>
         </View>
         <View style={styles.buttonContainer}>

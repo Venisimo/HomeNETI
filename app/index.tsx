@@ -4,7 +4,7 @@ import { NavigationContainer, NavigationIndependentTree } from "@react-navigatio
 export default function Index() {
   return (
     <NavigationIndependentTree>
-      <Navigate />;
+      <Navigate />
     </NavigationIndependentTree>
   )
 }

@@ -32,16 +32,12 @@ export default function HWcomments() {
              <View style={styles.SubjDateBlock}>
                 <View style={styles.subj}>
                     <Text style={styles.textLeft1}>Предмет:</Text>
-                    <TouchableOpacity onPress={() => setModalVisible(true)}>
                     <Text>dasda</Text>
-                    </TouchableOpacity>
                 </View>
                 
                 <View style={styles.subj}>
                     <Text style={styles.textLeft2}>Срок сдачи:</Text>
-                    <TouchableOpacity>
                     <Text>dsad</Text>
-                    </TouchableOpacity>
                 </View>
             </View>
         </ScrollView>

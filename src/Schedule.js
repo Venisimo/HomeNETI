@@ -94,7 +94,6 @@ const FirstRoute = () => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-    {/* <Footer navigation={navigation} /> */}
     </>
   );
 };

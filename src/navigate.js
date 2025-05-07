@@ -12,6 +12,7 @@ import { HeaderServiceIOS } from "../src/HeaderServiceIOS";
 import AuthScreen from "../src/Auth";
 import Group from "../src/Group";
 import HWcomments from "../src/HomeWorkComments";
+import Calendar from "../src/Calendar";
 
 const HEADER_HEIGHT = Platform.OS === "ios" ? 44 : 56;
 const TEXT_HEIGHT = Platform.OS === "ios" ? 64 : 0;
@@ -224,6 +225,22 @@ export default function Navigate() {
               fontSize: Platform.OS === "ios" ? 18 : 20 
             },
             headerTitle: "Домашнее задание",
+          }}
+        />
+        <Stack.Screen 
+          name="Calendar" 
+          component={Calendar}
+          options={{
+            headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45 } : { marginTop: 0 },
+            headerBackTitle: "",
+            headerTintColor: "black",
+            headerStyle: { height: HEADER_HEIGHT },
+            headerTitleStyle: { 
+              paddingBottom: TEXT_HEIGHT, 
+              alignSelf: 'flex-start', 
+              fontSize: Platform.OS === "ios" ? 18 : 20 
+            },
+            headerTitle: "Календарь",
           }}
         />
       </Stack.Navigator>
