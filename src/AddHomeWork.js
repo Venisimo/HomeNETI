@@ -231,8 +231,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   btnChoise: {
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 20,
+    height: 70,
   },
 
   container: {
