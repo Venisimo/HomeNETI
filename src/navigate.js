@@ -36,11 +36,14 @@ function MainTabs() {
         options={{
           headerTitle: "Расписание",
           tabBarStyle: {
-            height: 55, // сделать панель ниже и выше
-            paddingBottom: 10, // добавить отступ снизу
+            height: 55,
+            paddingBottom: 10,
             paddingTop: 10,
           },
-          tabBarShowLabel: false, // убрать текст под иконками
+          headerTitleContainerStyle: {
+            marginTop: Platform.OS === 'ios' ? 0 : -25, 
+          },
+          tabBarShowLabel: false, 
           tabBarIcon: ({ focused }) => (
             <Image
               source={
@@ -55,7 +58,7 @@ function MainTabs() {
             Platform.OS === "android" ? (
               <Image 
                 source={require('../src/img/settings.png')}
-                style={{ width: 30, height: 30, marginRight: 15 }}
+                style={{ width: 30, height: 30, marginRight: 15, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
               />
             ) : (
               <HeaderServiceIOS />
@@ -65,7 +68,7 @@ function MainTabs() {
             Platform.OS === "android" ? (
               <Image 
                 source={require('../src/img/logo.png')} 
-                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 10  }}
+                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 25  }}
               />
             ) : null
           ),
@@ -77,11 +80,14 @@ function MainTabs() {
         options={{
           headerTitle: "Авторизация",
           tabBarStyle: {
-            height: 55, // сделать панель ниже и выше
-            paddingBottom: 10, // добавить отступ снизу
+            height: 55,
+            paddingBottom: 10,
             paddingTop: 10,
           },
-          tabBarShowLabel: false, // убрать текст под иконками
+          headerTitleContainerStyle: {
+            marginTop: Platform.OS === 'ios' ? 0 : -25, 
+          },
+          tabBarShowLabel: false, 
           tabBarIcon: ({ focused }) => (
             <Image
               source={
@@ -96,7 +102,7 @@ function MainTabs() {
             Platform.OS === "android" ? (
               <Image 
                 source={require('../src/img/settings.png')}
-                style={{ width: 30, height: 30, marginRight: 15 }}
+                style={{ width: 30, height: 30, marginRight: 15, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
               />
             ) : (
               <HeaderServiceIOS />
@@ -106,7 +112,7 @@ function MainTabs() {
             Platform.OS === "android" ? (
               <Image 
                 source={require('../src/img/logo.png')} 
-                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 10 }}
+                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
               />
             ) : null
           ),
@@ -118,11 +124,14 @@ function MainTabs() {
         options={{
           headerTitle: "Сервисы",
           tabBarStyle: {
-            height: 55, // сделать панель ниже и выше
-            paddingBottom: 10, // добавить отступ снизу
+            height: 55,
+            paddingBottom: 10,
             paddingTop: 10,
           },
-          tabBarShowLabel: false, // убрать текст под иконками
+          headerTitleContainerStyle: {
+            marginTop: Platform.OS === 'ios' ? -10 : -25, 
+          },
+          tabBarShowLabel: false, 
           tabBarIcon: ({ focused }) => (
             <Image
               source={
@@ -137,7 +146,7 @@ function MainTabs() {
             Platform.OS === "android" ? (
               <Image 
                 source={require('../src/img/settings.png')}
-                style={{ width: 30, height: 30, marginRight: 15 }}
+                style={{ width: 30, height: 30, marginRight: 15, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
               />
             ) : (
               <HeaderServiceIOS />
@@ -147,7 +156,7 @@ function MainTabs() {
             Platform.OS === "android" ? (
               <Image 
                 source={require('../src/img/logo.png')} 
-                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 10 }}
+                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
               />
             ) : null
           ),
@@ -177,6 +186,13 @@ export default function Navigate() {
             headerStyle: { height: HEADER_HEIGHT },
             headerTitleStyle: { paddingBottom: TEXT_HEIGHT, alignSelf: 'flex-start' },
             headerTitle: "Домашние задания",
+            headerTitleContainerStyle: {
+              marginTop: Platform.OS === 'ios' ? 0 : -25, 
+            },
+            headerLeftContainerStyle: {
+              marginTop: Platform.OS === 'ios' ? -10 : -25,   
+              marginLeft: Platform.OS === 'ios' ? 0 : 10,
+            },
           }}
         />
         <Stack.Screen 
@@ -193,6 +209,9 @@ export default function Navigate() {
               fontSize: Platform.OS === "ios" ? 13 : 18 
             },
             headerTitle: "Добавление домашнего задания",
+            headerTitleContainerStyle: {
+              marginTop: Platform.OS === 'ios' ? 0 : -25, 
+            },
           }}
         />
         <Stack.Screen 
@@ -209,6 +228,9 @@ export default function Navigate() {
               fontSize: Platform.OS === "ios" ? 18 : 20 
             },
             headerTitle: "Моя группа",
+            headerTitleContainerStyle: {
+              marginTop: Platform.OS === 'ios' ? 0 : -25, 
+            },
           }}
         />
         <Stack.Screen 
@@ -225,6 +247,9 @@ export default function Navigate() {
               fontSize: Platform.OS === "ios" ? 18 : 20 
             },
             headerTitle: "Домашнее задание",
+            headerTitleContainerStyle: {
+              marginTop: Platform.OS === 'ios' ? 0 : -25, 
+            },
           }}
         />
         <Stack.Screen 
@@ -241,6 +266,9 @@ export default function Navigate() {
               fontSize: Platform.OS === "ios" ? 18 : 20 
             },
             headerTitle: "Календарь",
+            headerTitleContainerStyle: {
+              marginTop: Platform.OS === 'ios' ? 0 : -25, 
+            },
           }}
         />
       </Stack.Navigator>
