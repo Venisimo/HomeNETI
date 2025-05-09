@@ -1,21 +1,22 @@
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars';
 import React from 'react';
 import { View, StyleSheet, Platform, Text } from 'react-native';
+import { Header } from '@react-navigation/stack';
 
 LocaleConfig.locales['ru'] = {
   monthNames: [
-    'Январь',
-    'Февраль',
-    'Март',
-    'Апрель',
-    'Май',
-    'Июнь',
-    'Июль',
-    'Август',
-    'Сентябрь',
-    'Октябрь',
-    'Ноябрь',
-    'Декабрь'
+    'январь',
+    'февраль',
+    'март',
+    'апрель',
+    'май',
+    'июнь',
+    'июль',
+    'август',
+    'сентябрь',
+    'октябрь',
+    'ноябрь',
+    'декабрь'
   ],
   monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
   dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
@@ -42,16 +43,11 @@ export default function MyCalendar() {
               return (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <View style={{
-                   alignItems: 'center', 
-                   justifyContent: 'center',
                    backgroundColor: isToday ? 'white' : 'transparent',
-                   fontFamily: 'Stem',
-                   paddingVertical: 5,
                    borderRadius: 12,
-                   boxShadow: isToday ? '0px 4px 8px 0px rgb(123, 126, 128)' : 'transparent',
+                   boxShadow: isToday ? '0px 1px 2px 0px rgb(123, 126, 128)' : 'transparent',
                    paddingHorizontal: 8,
                    paddingVertical: 10,
-                   overflow: 'hidden',
                 }}>
                   <Text style={{
                     fontSize: isDisabled ? 10 : 14,
@@ -59,7 +55,7 @@ export default function MyCalendar() {
                     fontWeight: Platform.OS === 'ios' ? '600' : '700', 
                     textDisabledColor: '#fff',
                     paddingHorizontal: 8,
-                    paddingVertical: 4,
+                    paddingVertical: Platform.OS === 'ios' ? 4 : 0,
                     }}>
                     {date.day}
                   </Text>
@@ -74,28 +70,32 @@ export default function MyCalendar() {
             console.log('Выбранная дата', day.dateString);
           }}
           markingType={'custom'}
-          theme={{    
-            textDisabledColor: '#999', 
 
-            selectedDayBackgroundColor: '#9B9B9D',
-            todayTextColor: '#9B9B9D',
-            arrowColor: '#9B9B9D',
-            textDayFontFamily: 'Stem',
-            textMonthFontFamily: 'Stem',
-            textDayHeaderFontFamily: 'Stem',
-            textDayFontWeight: Platform.OS == 'ios' ? '600' : '700',
-            textMonthFontWeight: '700',
-            textDayHeaderFontWeight: '500',
-            textDayFontSize: 14,
-            textMonthFontSize: 16,
-            textDayHeaderFontSize: 12,
-            calendarBackground: '#EEEEF0',
-            
-          }}
           headerStyle={{
             backgroundColor: '#FFFFFF',
             paddingBottom: 10,
             marginBottom: 20, 
+          }}
+
+          renderArrow={(direction) => (
+            <Text style={{ fontSize: "ios" ? 25 : 30, color: '#A2A2A4' }}>
+              {direction === 'left' ? '‹' : '›'}
+            </Text>
+          )}
+          renderHeader={(date) => {
+          const month = date.toString('MMMM', 'ru');
+          const year = date.toString('yyyy');
+
+          return (
+            <View style={styles.Header}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{month}</Text>
+              <Text style={{ fontSize: 14, color: '#999' }}>{year}</Text>
+            </View>
+          );
+          }}
+          theme={{
+            calendarBackground: '#EEEEF0',
+            textSectionTitleColor: '#000',
           }}
         />
       </View>
@@ -103,4 +103,9 @@ export default function MyCalendar() {
   }
   
 const styles = StyleSheet.create({
+  Header: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+  }
  });

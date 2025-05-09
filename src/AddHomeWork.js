@@ -3,6 +3,7 @@ import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert, Imag
 import { RadioButton } from 'react-native-paper';
 import axios from "axios";
 import { ip } from "./ip";
+import Calendar from "../src/Calendar";
 
 
 export default function AddHomeWork({ navigation }) {
@@ -177,6 +178,8 @@ export default function AddHomeWork({ navigation }) {
             </View>
           </View>
         </TouchableWithoutFeedback>
+        
+        {/* <Calendar></Calendar> //задел на будющее */}
       </Modal>
 
       <TextInput

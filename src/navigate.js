@@ -21,6 +21,79 @@ const TEXT_HEIGHT = Platform.OS === "ios" ? 64 : 0;
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const getDefaultHeaderOptions = (title, overrides = {}) => ({
+  headerTitle: title,
+  headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45 } : { marginTop: 0 },
+  headerBackTitle: "",
+  headerTintColor: "black",
+  headerStyle: { height: HEADER_HEIGHT },
+  headerTitleStyle: { 
+    paddingBottom: TEXT_HEIGHT, 
+    alignSelf: 'flex-start', 
+    fontSize: Platform.OS === "ios" ? 18 : 20,
+    ...(overrides.headerTitleStyle || {})
+  },
+  headerTitleContainerStyle: {
+    marginTop: Platform.OS === 'ios' ? 0 : -25, 
+  },
+  headerLeftContainerStyle: {
+    marginTop: Platform.OS === 'ios' ? -45 : -25,   
+    marginLeft: Platform.OS === 'ios' ? 0 : 10,
+  },
+});
+
+const tabIcons = {
+  profile: {
+    active: require('../src/img/footer/profileActive.png'),
+    default: require('../src/img/footer/profile.png'),
+  },
+  schedule: {
+    active: require('../src/img/footer/scheduleActive.png'),
+    default: require('../src/img/footer/schedule.png'),
+  },
+  services: {
+    active: require('../src/img/footer/servicesActive.png'),
+    default: require('../src/img/footer/services.png'),
+  },
+  // добавь другие по аналогии
+};
+const getDefaultTabOptions = (title, imageKey) => ({
+  headerTitle: title,
+  tabBarStyle: {
+    height: 55,
+    paddingBottom: 10,
+    paddingTop: 10,
+  },
+  headerTitleContainerStyle: {
+    marginTop: Platform.OS === 'ios' ? -10 : -25, 
+  },
+  tabBarShowLabel: false, 
+  tabBarIcon: ({ focused }) => (
+      <Image
+        source={focused ? tabIcons[imageKey].active : tabIcons[imageKey].default}
+        style={styles.footerIcon}
+      />
+    ),
+    headerRight: () => (
+      Platform.OS === "android" ? (
+        <Image 
+          source={require('../src/img/settings.png')}
+          style={{ width: 30, height: 30, marginRight: 15, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
+        />
+      ) : (
+        <HeaderServiceIOS />
+      )
+    ),
+    headerLeft: () => (
+      Platform.OS === "android" ? (
+        <Image 
+          source={require('../src/img/logo.png')} 
+          style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
+        />
+      ) : null
+    ),
+});
+
 // Таб-навигатор с сервисами и расписанием
 function MainTabs() {
   return (
@@ -33,134 +106,17 @@ function MainTabs() {
       <Tab.Screen
         name="Schedule"
         component={Schedule}
-        options={{
-          headerTitle: "Расписание",
-          tabBarStyle: {
-            height: 55,
-            paddingBottom: 10,
-            paddingTop: 10,
-          },
-          headerTitleContainerStyle: {
-            marginTop: Platform.OS === 'ios' ? 0 : -25, 
-          },
-          tabBarShowLabel: false, 
-          tabBarIcon: ({ focused }) => (
-            <Image
-              source={
-                focused
-                  ? require('../src/img/footer/scheduleActive.png')
-                  : require('../src/img/footer/schedule.png')
-              }
-              style={styles.footerIcon}
-            />
-          ),
-          headerRight: () => (
-            Platform.OS === "android" ? (
-              <Image 
-                source={require('../src/img/settings.png')}
-                style={{ width: 30, height: 30, marginRight: 15, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
-              />
-            ) : (
-              <HeaderServiceIOS />
-            )
-          ),
-          headerLeft: () => (
-            Platform.OS === "android" ? (
-              <Image 
-                source={require('../src/img/logo.png')} 
-                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 25  }}
-              />
-            ) : null
-          ),
-        }}
+        options={getDefaultTabOptions("Расписание", 'schedule')}
       />
       <Tab.Screen
         name="Auth"
         component={AuthScreen}
-        options={{
-          headerTitle: "Авторизация",
-          tabBarStyle: {
-            height: 55,
-            paddingBottom: 10,
-            paddingTop: 10,
-          },
-          headerTitleContainerStyle: {
-            marginTop: Platform.OS === 'ios' ? 0 : -25, 
-          },
-          tabBarShowLabel: false, 
-          tabBarIcon: ({ focused }) => (
-            <Image
-              source={
-                focused
-                  ? require('../src/img/footer/profileAcitve.png')
-                  : require('../src/img/footer/profile.png')
-              }
-              style={styles.footerIcon}
-            />
-          ),
-          headerRight: () => (
-            Platform.OS === "android" ? (
-              <Image 
-                source={require('../src/img/settings.png')}
-                style={{ width: 30, height: 30, marginRight: 15, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
-              />
-            ) : (
-              <HeaderServiceIOS />
-            )
-          ),
-          headerLeft: () => (
-            Platform.OS === "android" ? (
-              <Image 
-                source={require('../src/img/logo.png')} 
-                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
-              />
-            ) : null
-          ),
-        }}
+        options={getDefaultTabOptions("Авторизация", 'profile')}
       />
       <Tab.Screen
         name="Services"
         component={Services}
-        options={{
-          headerTitle: "Сервисы",
-          tabBarStyle: {
-            height: 55,
-            paddingBottom: 10,
-            paddingTop: 10,
-          },
-          headerTitleContainerStyle: {
-            marginTop: Platform.OS === 'ios' ? -10 : -25, 
-          },
-          tabBarShowLabel: false, 
-          tabBarIcon: ({ focused }) => (
-            <Image
-              source={
-                focused
-                  ? require('../src/img/footer/servicesActive.png')
-                  : require('../src/img/footer/services.png')
-              }
-              style={styles.footerIcon}
-            />
-          ),
-          headerRight: () => (
-            Platform.OS === "android" ? (
-              <Image 
-                source={require('../src/img/settings.png')}
-                style={{ width: 30, height: 30, marginRight: 15, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
-              />
-            ) : (
-              <HeaderServiceIOS />
-            )
-          ),
-          headerLeft: () => (
-            Platform.OS === "android" ? (
-              <Image 
-                source={require('../src/img/logo.png')} 
-                style={{ width: 40, height: 30, marginLeft: 10, marginRight: 10, marginBottom: 25 }}
-              />
-            ) : null
-          ),
-        }}
+        options={getDefaultTabOptions("Сервисы", 'services')}
       />
     </Tab.Navigator>
   );
@@ -179,97 +135,33 @@ export default function Navigate() {
         <Stack.Screen 
           name="HomeWork" 
           component={HomeWork} 
-          options={{
-            headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45 } : { marginTop: 0 },
-            headerBackTitle: "",
-            headerTintColor: "black",
-            headerStyle: { height: HEADER_HEIGHT },
-            headerTitleStyle: { paddingBottom: TEXT_HEIGHT, alignSelf: 'flex-start' },
-            headerTitle: "Домашние задания",
-            headerTitleContainerStyle: {
-              marginTop: Platform.OS === 'ios' ? 0 : -25, 
-            },
-            headerLeftContainerStyle: {
-              marginTop: Platform.OS === 'ios' ? -10 : -25,   
-              marginLeft: Platform.OS === 'ios' ? 0 : 10,
-            },
-          }}
+          options={
+            getDefaultHeaderOptions("Домашние задания")
+          }
         />
         <Stack.Screen 
           name="AddHomeWork" 
           component={AddHomeWork}
-          options={{
-            headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45 } : { marginTop: 0 },
-            headerBackTitle: "",
-            headerTintColor: "black",
-            headerStyle: { height: HEADER_HEIGHT },
-            headerTitleStyle: { 
-              paddingBottom: TEXT_HEIGHT, 
-              alignSelf: 'flex-start', 
-              fontSize: Platform.OS === "ios" ? 13 : 18 
+          options={getDefaultHeaderOptions("Добавление домашнего задания", {
+            headerTitleStyle: {
+              fontSize: Platform.OS === "ios" ? 13 : 18,
             },
-            headerTitle: "Добавление домашнего задания",
-            headerTitleContainerStyle: {
-              marginTop: Platform.OS === 'ios' ? 0 : -25, 
-            },
-          }}
+          })}
         />
         <Stack.Screen 
           name="Group" 
           component={Group}
-          options={{
-            headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45 } : { marginTop: 0 },
-            headerBackTitle: "",
-            headerTintColor: "black",
-            headerStyle: { height: HEADER_HEIGHT },
-            headerTitleStyle: { 
-              paddingBottom: TEXT_HEIGHT, 
-              alignSelf: 'flex-start', 
-              fontSize: Platform.OS === "ios" ? 18 : 20 
-            },
-            headerTitle: "Моя группа",
-            headerTitleContainerStyle: {
-              marginTop: Platform.OS === 'ios' ? 0 : -25, 
-            },
-          }}
+          options={getDefaultHeaderOptions("Моя группа")}
         />
         <Stack.Screen 
           name="HWcomments" 
           component={HWcomments}
-          options={{
-            headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45 } : { marginTop: 0 },
-            headerBackTitle: "",
-            headerTintColor: "black",
-            headerStyle: { height: HEADER_HEIGHT },
-            headerTitleStyle: { 
-              paddingBottom: TEXT_HEIGHT, 
-              alignSelf: 'flex-start', 
-              fontSize: Platform.OS === "ios" ? 18 : 20 
-            },
-            headerTitle: "Домашнее задание",
-            headerTitleContainerStyle: {
-              marginTop: Platform.OS === 'ios' ? 0 : -25, 
-            },
-          }}
+          options={getDefaultHeaderOptions("Домашнее задание")}
         />
         <Stack.Screen 
           name="Calendar" 
           component={Calendar}
-          options={{
-            headerLeftContainerStyle: Platform.OS === "ios" ? { marginTop: -45 } : { marginTop: 0 },
-            headerBackTitle: "",
-            headerTintColor: "black",
-            headerStyle: { height: HEADER_HEIGHT },
-            headerTitleStyle: { 
-              paddingBottom: TEXT_HEIGHT, 
-              alignSelf: 'flex-start', 
-              fontSize: Platform.OS === "ios" ? 18 : 20 
-            },
-            headerTitle: "Календарь",
-            headerTitleContainerStyle: {
-              marginTop: Platform.OS === 'ios' ? 0 : -25, 
-            },
-          }}
+          options={getDefaultHeaderOptions("Календарь")}
         />
       </Stack.Navigator>
     </NavigationContainer>
