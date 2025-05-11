@@ -1,4 +1,4 @@
-host = "127.0.0.1"
+host = "194.164.245.230"
 user = "postgres"
 password = "1234"
-db_name = "HomeNETI"
+db_name = "homeneti"
