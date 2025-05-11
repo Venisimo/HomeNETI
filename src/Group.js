@@ -6,9 +6,23 @@ const Group = () => {
   return (
     <>
       <ScrollView>
-        <Text style={styles.GroupName}>АВТ-414</Text>
+        <View style={styles.headerContainer}>
+          <Text style={styles.GroupName}>АВТ-414</Text>
+          <TouchableOpacity style={styles.menuButton}>
+            <Text style={styles.menuIcon}>⋮</Text>
+          </TouchableOpacity>
+        </View>
+        
         <Text style={styles.Direction}>Направление</Text>
         <Text style={styles.Faculty}>Факультет</Text>
+        
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Редакторы</Text>
+          <TouchableOpacity style={styles.menuButton}>
+            <Text style={styles.menuIcon}>⋮</Text>
+          </TouchableOpacity>
+        </View>
+        
         <View style={styles.HomeWorkBlock}>
           <View style={styles.HomeWorkBlockChild1}>
             <Text style={styles.number}>1</Text>
@@ -18,9 +32,9 @@ const Group = () => {
               <View style={styles.redactor}>
                 <Text style={styles.text3}>Сделать редактором</Text>
                 <TouchableOpacity style={styles.button}>
-                      <Text style={styles.buttonText}>+</Text>
+                  <Text style={styles.buttonText}>+</Text>
                 </TouchableOpacity>
-             </View>
+              </View>
             </View>
           </View>
         </View>
@@ -30,6 +44,30 @@ const Group = () => {
 };
 
 const styles = StyleSheet.create({ 
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 20,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  menuButton: {
+    padding: 10,
+  },
+  menuIcon: {
+    fontSize: 24,
+    color: '#000',
+  },
   redactor: {
     display: "flex",
     flexDirection: "row",
@@ -58,12 +96,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   button: {
-    height: 50,
-    borderRadius: 5,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     backgroundColor: '#007bff',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginLeft: 10,
   },
   buttonText: {
     color: '#fff',
@@ -71,7 +110,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   text2: {
-    fontSize: Platform.OS === "ios" ? 24 : 20, 
+    fontSize: Platform.OS === "ios" ? 18 : 16, 
   },
   text3: {
     fontSize: 12, 
