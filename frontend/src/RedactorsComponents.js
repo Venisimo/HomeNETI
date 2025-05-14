@@ -2,10 +2,10 @@ import { Platform, Text, View, StyleSheet, Image, TouchableOpacity } from "react
 import { useNavigation } from "@react-navigation/native";
 const edit = () => {
     return (
-      <View style={styles.editBlock}>
+      <TouchableOpacity style={styles.editBlock}>
         <Text style={[styles.text3, styles.downText]}>Изменить</Text>
         <Image style={styles.IconEdit} source={require('../src/img/edit.png')}/>
-      </View>
+      </TouchableOpacity>
     );
   }
 
@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   editBlock: {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
   },
 
   ButtonAdd: {

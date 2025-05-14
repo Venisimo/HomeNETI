@@ -13,6 +13,7 @@ import AuthScreen from "../src/Auth";
 import Group from "../src/Group";
 import HWcomments from "../src/HomeWorkComments";
 import Calendar from "../src/Calendar";
+import { UserProvider } from './UserContext'; // путь зависит от местоположения файла
 
 const HEADER_HEIGHT = Platform.OS === "ios" ? 44 : 56;
 const TEXT_HEIGHT = Platform.OS === "ios" ? 64 : 0;
@@ -125,6 +126,7 @@ function MainTabs() {
 // Главный навигатор
 export default function Navigate() {
   return (
+    <UserProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen 
@@ -165,6 +167,7 @@ export default function Navigate() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </UserProvider>
   );
 }
 

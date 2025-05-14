@@ -1,8 +1,11 @@
 import React from "react";
 import { ScrollView, Text, View, StyleSheet, Image, Platform, TouchableOpacity } from "react-native";
 import { Footer } from "./Footer"; 
+import { ip } from "./ip";
+import axios from 'axios';
 
 const Group = () => {
+
   return (
     <>
       <ScrollView>
@@ -16,12 +19,12 @@ const Group = () => {
         <Text style={styles.Direction}>Направление</Text>
         <Text style={styles.Faculty}>Факультет</Text>
         
-        <View style={styles.sectionHeader}>
+        {/* <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Редакторы</Text>
           <TouchableOpacity style={styles.menuButton}>
             <Text style={styles.menuIcon}>⋮</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         
         <View style={styles.HomeWorkBlock}>
           <View style={styles.HomeWorkBlockChild1}>
@@ -99,13 +102,13 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#007bff',
+    // backgroundColor: '#007bff',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: '#29BE87',
     fontSize: 18,
     fontWeight: 'bold',
   },

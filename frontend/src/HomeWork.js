@@ -4,6 +4,8 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { ip } from "./ip";
 import axios from 'axios';
 import RedactorsComponents from './RedactorsComponents';
+import MarkDone from './markDone';
+import { useUser } from './UserContext';
 
 // Группировка по дате
 const groupTasksByDate = (tasks) => {
@@ -32,6 +34,7 @@ const useTasks = (party, user_id) => {
       .then(response => {
         const grouped = groupTasksByDate(response.data);
         setTasksByDate(grouped);
+        // console.log(grouped);
       })
       .catch(error => {
         console.error("Ошибка:", error);
@@ -44,8 +47,7 @@ const useTasks = (party, user_id) => {
   return { tasksByDate, isLoading };
 };
 
-
-const WithDeadline = ({ tasksByDate, isLoading }) => {
+const WithDeadline = ({ tasksByDate, isLoading, user_id }) => {
 
   if (isLoading) {
     return <Text style={{ textAlign: "center", marginTop: 20 }}>Загрузка...</Text>;
@@ -92,9 +94,12 @@ const WithDeadline = ({ tasksByDate, isLoading }) => {
                         <Text style={[styles.text3, styles.SubjName]}>{task.subject}</Text>
                       </View> 
                       <View style={styles.HomeWorkBlockChild3}>
-                        {role == 0 ? "" : RedactorsComponents[0]()}
-                        <Text style={[styles.text3, styles.downText]}>Отметить выполненным</Text>
-                        <Image style={styles.IconNote} resizeMode="contain" source={require('../src/img/Galochka.png')}/>
+                        {user_id == 1 ? "" : RedactorsComponents[0]()}
+                        <MarkDone
+                          role={user_id}
+                          task_id={Number(task.task_id)}
+                          user_id={Number(user_id)}
+                        />
                       </View> 
                     </View>
                   ))}
@@ -110,11 +115,12 @@ const WithDeadline = ({ tasksByDate, isLoading }) => {
   );
 }
 
-const WithoutDeadline = ({ tasksByDate, isLoading }) => {
+const WithoutDeadline = ({ tasksByDate, isLoading, user_id }) => {
 
   if (isLoading) {
     return <Text style={{ textAlign: "center", marginTop: 20 }}>Загрузка...</Text>;
   }
+
 
   return (
     <>
@@ -131,21 +137,24 @@ const WithoutDeadline = ({ tasksByDate, isLoading }) => {
                         <Image style={styles.avatar} source={require('../src/img/Avatar.png')}/>
                         <View style={styles.SurnameHWtext}>
                           <Text style={styles.text2}>{task.creator}</Text>
-                          <Text style={[styles.text3, styles.HWtext]}>{task.task}</Text>
+                          <Text style={[styles.VItext3, styles.HWtext]}>{task.task}</Text>
                         </View>
                       </View>
-                      <Text style={[styles.text3, styles.date]}>{task.date}</Text> 
+                      <Text style={[styles.VItext3, styles.date]}>{task.date}</Text> 
                       <View style={styles.HomeWorkBlockChild2}>
-                        <Text style={styles.text3}>Предмет: </Text>
-                        <Text style={[styles.text3, styles.SubjName]}>{task.subject}</Text>
+                        <Text style={styles.VItext3}>Предмет: </Text>
+                        <Text style={[styles.VItext3, styles.SubjName]}>{task.subject}</Text>
+                      </View> 
+                     <View style={styles.HomeWorkBlockChild3}>
+                        {user_id == 1 ? "" : RedactorsComponents[0]()}
+                        <MarkDone
+                          role={role}
+                          task_id={Number(task.task_id)}
+                          user_id={Number(user_id)}
+                        />
                       </View> 
                       <View style={styles.HomeWorkBlockChild3}>
-                        {role == 0 ? "" : RedactorsComponents[0]()}
-                        <Text style={[styles.text3, styles.downText]}>Отметить выполненным</Text>
-                        <Image style={styles.IconNote} resizeMode="contain" source={require('../src/img/Galochka.png')}/>
-                      </View> 
-                      <View style={styles.HomeWorkBlockChild3}>
-                        <Text style={[styles.text3, styles.downText]}>Назначить свой срок</Text>
+                        <Text style={[styles.VItext3, styles.downText]}>Назначить свой срок</Text>
                         <Image style={styles.IconCalendar} resizeMode="contain" source={require('../src/img/calanderIcon.png')}/>
                       </View> 
                     </View>
@@ -164,7 +173,9 @@ const WithoutDeadline = ({ tasksByDate, isLoading }) => {
 
 export default function TabHomeWork() {
   const party = 'AVT-414';
-  const user_id = 1;
+  const { userId } = useUser(); 
+  console.log("userId:", userId);
+  const user_id = userId;
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'first', title: 'Со сроком' },
@@ -179,9 +190,9 @@ export default function TabHomeWork() {
           renderScene={({ route }) => {
             switch (route.key) {
               case 'first':
-                return <WithDeadline tasksByDate={tasksByDate} isLoading={isLoading} />;
+                return <WithDeadline tasksByDate={tasksByDate} isLoading={isLoading} user_id={user_id} />;
               case 'second':
-                return <WithoutDeadline tasksByDate={tasksByDate} isLoading={isLoading} />;
+                return <WithoutDeadline tasksByDate={tasksByDate} isLoading={isLoading} user_id={user_id} />;
               default:
                 return null;
             }
@@ -205,13 +216,14 @@ export default function TabHomeWork() {
           )}
           swipeEnabled={true}
         />
-        <View>{role == 0 ? "" : RedactorsComponents[1]()}</View>
+        <View>{user_id == 1 ? "" : RedactorsComponents[1]()}</View>
     </View>
   );
 }
 
 
 const styles = StyleSheet.create({
+
 
   IconEdit: {
     width: Platform.OS === "ios" ? 18 : 15,
@@ -328,5 +340,14 @@ const styles = StyleSheet.create({
   downText: {
     marginLeft: role === 0 ? 16 : 5,
     fontWeight: Platform.OS === "ios" ? 600 : 700,
+  },
+
+  VItext3: {
+    // fontSize: 20, 
+    // fontFamily: 'Stem',
+    // fontWeight: Platform.OS === "ios" ? 900 : 1000,
+    // fontStyle: 'normal',
+    // marginLeft: 20,
   }
+
 });

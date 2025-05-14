@@ -1,14 +1,17 @@
+// AuthScreen.js
 import React, { useState } from "react";
-import { ScrollView, Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from "react-native";
+import { ScrollView, Text, View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { useUser } from './UserContext';  // Импортируем хук
 
 const AuthScreen = () => {
-  const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [login, setLogin] = useState("");  // Состояние для логина
+  const [password, setPassword] = useState("");  // Состояние для пароля
+  const [rememberMe, setRememberMe] = useState(false);  // Состояние для флага "запомнить меня"
+  const { setUserId } = useUser();  // Получаем setUserId из контекста
 
   const handleSignIn = () => {
-    // Здесь будет логика авторизации
     console.log("Login:", login, "Password:", password, "Remember me:", rememberMe);
+    setUserId(login);  // Устанавливаем login как userId в контексте
   };
 
   return (
@@ -128,18 +131,20 @@ const styles = StyleSheet.create({
   },
   forgotPassword: {
     fontSize: 14,
-    color: '#007bff',
+    color: '#29BE87',
   },
   signInButton: {
     height: 50,
-    backgroundColor: '#007bff',
-    borderRadius: 5,
+    backgroundColor: 'transparent', 
+    borderWidth: 1, 
+    borderColor: 'black', 
+    borderRadius: 30, 
     justifyContent: 'center',
     alignItems: 'center',
   },
   signInText: {
-    color: '#fff',
-    fontSize: 18,
+    color: '#000',
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });

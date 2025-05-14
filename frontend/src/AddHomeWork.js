@@ -4,7 +4,7 @@ import { RadioButton } from 'react-native-paper';
 import axios from "axios";
 import { ip } from "./ip";
 import MyCalendar from "../src/Calendar";
-
+import { useUser } from './UserContext';
 
 export default function AddHomeWork({ navigation }) {
   const [task, setTask] = useState("");
@@ -13,19 +13,22 @@ export default function AddHomeWork({ navigation }) {
   const [party, setParty] = useState("");
   const [deadline, setDeadline] = useState("");
 
+  const { userId } = useUser(); 
+  console.log("userId:", userId);
+
   const formatDate = (dateString) => {
     if (!dateString) return "Выбрать";
     const [year, month, day] = dateString.split('-');
     return `${day}.${month}.${year}`;
   };
 
-  const [id, setId] = useState(1);
-  const [creator, setCreator] = useState("Юзеров Ю. Ю.");
+  const [id, setId] = useState(userId);
+  const [creator, setCreator] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [patronymic, setPatronymic] = useState("");
 
-  const subjects = ["Математический анализ", "Физика", "Программирование", "Биология", "История"];
+  const subjects = ["Математический анализ", "Физика", "Программирование", "Теория вероятностей и математическая статистика", "Иностранный язык", "Основы проектной деятельности", "Дискретная математика"];
 
   useEffect(() => {
     // const getId = () => {
@@ -80,7 +83,7 @@ export default function AddHomeWork({ navigation }) {
             date: new Date().toISOString().split('T')[0], // Текущая дата
             party,
             deadline: formattedDeadline,
-            creator,
+            creator: `${surname} ${name[0]}. ${patronymic[0]}.`,
           }, {
             params: {
               user_id: id // Добавляем user_id в параметры запроса
@@ -95,6 +98,7 @@ export default function AddHomeWork({ navigation }) {
           setTask("");
           setSubject("");
           setDeadline("");
+          setCreator("");
           setChoiseDate("Выбрать");
         } catch (error) {
           console.error("Ошибка при добавлении:", error);

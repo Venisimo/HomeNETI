@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert, Image, 
   TouchableWithoutFeedback, Keyboard, Platform, ScrollView, Dimensions  } from "react-native";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { ip } from "./ip";
+import axios from 'axios';
 
 let data = {
   typeLesson: ["Лекция", "Практика"],
@@ -15,12 +17,38 @@ const lessons = data.Subj.map((subj, index) => ({
   textHW: data.textHW[index],
 }));
 
+const useScedule = (user_id) => {
+  const [tasksByDate, setTasksByDate] = useState({});
+  const [IsLoading, setIsLoading] = useState({});
+
+  useEffect(() => {
+    axios.get(`http://${ip}:5000/api/user/schedule/all_weeks`, {
+      params: { user_id }
+    })
+      .then(response => {
+        setTasksByDate(response.data.schedule); // сохраняем данные в состояние
+      })
+      .catch(error => {
+        console.error("Ошибка:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [user_id]);
+
+  return { tasksByDate, IsLoading }; // возвращаем данные
+};
+
 const FirstRoute = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [ModalSubj, setModalSubj] = useState('');
   const [ModalType, setModalType] = useState('');
   const [ModalTextHW, setModalTextHW] = useState('');
+  const user_id = 1;
+  const { tasksByDate } = useScedule(user_id);
+
+// console.log(tasksByDate);
 
   return (
     <>
@@ -111,6 +139,7 @@ const renderScene = SceneMap({
   second: SecondRoute,
   third: ThirdRoute,
 });
+
 
 export default function Schedule() {
   const [index, setIndex] = React.useState(0);
