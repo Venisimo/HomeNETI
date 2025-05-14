@@ -3,7 +3,7 @@ import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert, Imag
 import { RadioButton } from 'react-native-paper';
 import axios from "axios";
 import { ip } from "./ip";
-import Calendar from "../src/Calendar";
+import MyCalendar from "../src/Calendar";
 
 
 export default function AddHomeWork({ navigation }) {
@@ -13,6 +13,12 @@ export default function AddHomeWork({ navigation }) {
   const [party, setParty] = useState("");
   const [deadline, setDeadline] = useState("");
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "Выбрать";
+    const [year, month, day] = dateString.split('-');
+    return `${day}.${month}.${year}`;
+  };
+
   const [id, setId] = useState(1);
   const [creator, setCreator] = useState("Юзеров Ю. Ю.");
   const [name, setName] = useState("");
@@ -20,13 +26,14 @@ export default function AddHomeWork({ navigation }) {
   const [patronymic, setPatronymic] = useState("");
 
   const subjects = ["Математический анализ", "Физика", "Программирование", "Биология", "История"];
-  const dates = ["2025-03-10", "2025-03-11", "2025-03-12", "2025-03-13", "2025-03-14", "2025-03-15"];
 
   useEffect(() => {
     // const getId = () => {
     //   setId(1);
     // }
     // getId();
+     console.log('Текущая выбранная дата:', choiseDate);
+      console.log('Deadline:', deadline);
 
     const fetchUser = async () => {
       try {
@@ -53,13 +60,22 @@ export default function AddHomeWork({ navigation }) {
     setDate(dateDst);
     // console.log(dateDst);
 
-  }, []); 
+  }, [id]); 
 
   const handleAddHomework = () => {
-    if (!task || !subject || !date || !deadline) {
+    if (!task || !subject) {
       Alert.alert("Ошибка", "Заполните все поля!");
       return;
     }
+
+      const homeworkData = {
+        task,
+        subject,
+        date: new Date().toISOString().split('T')[0], // Текущая дата
+        party,
+        deadline: choiseDate, // Используем choiseDate
+        creator
+      };
 
     axios
       .post(`http://${ip}:5000/api/task`, { task, subject, date, party, deadline, creator })
@@ -100,10 +116,13 @@ export default function AddHomeWork({ navigation }) {
         <Text style={styles.date}>{date[8]}{date[9]}.{date[5]}{date[6]}.{date[2]}{date[3]}</Text>                 
       </View>                                                         
 
-      <Modal visible={modalVisible} transparent={true}>
-        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modal}>
+      <Modal visible={modalVisible} transparent={true} animationType="fade">
+        <View style={styles.modalContainer}>
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+            <View style={StyleSheet.absoluteFill} />
+          </TouchableWithoutFeedback>
+          
+          <View style={styles.modal}>
             {subjects.map((subject, index) => (
               <TouchableOpacity
                 key={index}
@@ -113,74 +132,60 @@ export default function AddHomeWork({ navigation }) {
                 <RadioButton
                   value={subject}
                   status={selectedValue === subject ? "checked" : "unchecked"}
-                  onPress={() => 
-                    {
-                      setSelectedValue(subject);
-                    }}
+                  onPress={() => setSelectedValue(subject)}
                   color="#00cc73"
                   uncheckedColor="#00cc73" 
                 />
                 <Text>{subject}</Text>
               </TouchableOpacity>
-                  
             ))}
-              
-              <TouchableOpacity style={styles.btnChoise} onPress={() => 
-                {
-                  if (selectedValue) {
-                    setChoiseSubj(selectedValue);
-                    setSubject(selectedValue);
-                  }
-                  setModalVisible(false);
-                }}>
-                <Text>Выбрать</Text>
-              </TouchableOpacity>
-            </View>
+            
+            <TouchableOpacity 
+              style={styles.btnChoise} 
+              onPress={() => {
+                if (selectedValue) {
+                  setChoiseSubj(selectedValue);
+                  setSubject(selectedValue);
+                }
+                setModalVisible(false);
+              }}
+            >
+              <Text>Выбрать</Text>
+            </TouchableOpacity>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
       </Modal>
 
-      <Modal visible={modalVisibleDate} transparent={true}>
-        <TouchableWithoutFeedback onPress={() => setModalVisibleDate(false)}>
+     <Modal visible={modalVisibleDate} transparent={true} animationType="fade">
           <View style={styles.modalContainer}>
-            <View style={styles.modal}>
-            {dates.map((date, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.radioItem}
-                onPress={() => setSelectedValue(date)}
-              >
-                <RadioButton
-                  value={date}
-                  status={selectedValue === date ? "checked" : "unchecked"}
-                  onPress={() => 
-                    {
-                      setSelectedValue(date);
-                    }}
-                  color="#00cc73"
-                  uncheckedColor="#00cc73" 
+            <TouchableWithoutFeedback onPress={() => setModalVisibleDate(false)}>
+              <View style={StyleSheet.absoluteFill} />
+            </TouchableWithoutFeedback>
+            
+           <View style={[styles.modal, styles.modalCalendar]}>
+              <View style={{ width: '100%' }}>
+                <MyCalendar
+                  selectedDate={deadline}
+                  onDateSelect={(selectedDate) => {
+                    if (selectedDate < new Date().toISOString().split('T')[0]) {
+                      Alert.alert("Ошибка", "Нельзя выбрать прошедшую дату");
+                      return;
+                    }
+                    setDeadline(selectedDate);
+                    setChoiseDate(selectedDate);
+                    setModalVisibleDate(false);
+                  }}
+                  textStyleOverride={{
+                    defaultFontSize: 10,
+                    disabledFontSize: 8,
+                    defaultColor: '#222',
+                    disabledColor: '#ccc'
+                  }}
                 />
-                <Text>{date}</Text>
-              </TouchableOpacity>
-                  
-            ))}
-              
-              <TouchableOpacity style={styles.btnChoise} onPress={() => 
-                {
-                  if (selectedValue) {
-                    setChoiseDate(selectedValue);
-                    setDeadline(selectedValue);
-                  }
-                  setModalVisibleDate(false);
-                }}>
-                <Text>Выбрать</Text>
-              </TouchableOpacity>
-            </View>
+              </View>
+            </View> 
           </View>
-        </TouchableWithoutFeedback>
-        
-        {/* <Calendar></Calendar> //задел на будющее */}
-      </Modal>
+        </Modal>
 
       <TextInput
           multiline={true}
@@ -201,7 +206,7 @@ export default function AddHomeWork({ navigation }) {
         <View style={styles.subj}>
           <Text style={styles.textLeft2}>Срок сдачи:</Text>
           <TouchableOpacity onPress={() => setModalVisibleDate(true)}>
-            <Text>{choiseDate}</Text>
+            <Text>{deadline ? formatDate(deadline) : "Выбрать"}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -218,16 +223,24 @@ export default function AddHomeWork({ navigation }) {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 12,
   },
-  modal: {
+   modal: {
     width: 250,
     padding: 20,
     backgroundColor: "white",
     borderRadius: 10,
   },
+  modalCalendar: {
+  backgroundColor: 'rgb(204, 207, 209)',
+  borderRadius: 20,
+  padding: 10,
+  width: '90%',
+  maxWidth: 800,
+},
   radioItem: {
     flexDirection: "row",
     alignItems: "center",

@@ -129,7 +129,7 @@ def get_homework():
                     "task_id": row[0],
                     "task": row[1],
                     "subject": row[2],
-                    "deadline": row[3].strftime('%d.%m') if row[3] else None,  # Форматируем дату
+                    "deadline": row[3].strftime('%d.%m') if row[3] else None, # Форматируем дату
                     "party": row[4],
                     "date": row[5].strftime('%d.%m.%y'),
                     "creator": row[6],
@@ -192,7 +192,7 @@ def settask():
         subject = data["subject"]
         date = data["date"]
         party = data["party"]
-        deadline = data["deadline"]
+        deadline = data.get("deadline") if data.get("deadline") else None
         creator = data["creator"]
         
         cur.execute("""
