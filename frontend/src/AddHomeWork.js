@@ -62,38 +62,48 @@ export default function AddHomeWork({ navigation }) {
 
   }, [id]); 
 
-  const handleAddHomework = () => {
-    if (!task || !subject) {
-      Alert.alert("Ошибка", "Заполните все поля!");
-      return;
-    }
+      const handleAddHomework = async () => {
+        if (!task || !subject) {
+          Alert.alert("Ошибка", "Заполните все поля!");
+          return;
+        }
 
-      const homeworkData = {
-        task,
-        subject,
-        date: new Date().toISOString().split('T')[0], // Текущая дата
-        party,
-        deadline: choiseDate, // Используем choiseDate
-        creator
+        try {
+          // Форматируем deadline для сервера
+          const formattedDeadline = deadline 
+            ? new Date(deadline).toISOString().split('T')[0]
+            : null;
+
+          const response = await axios.post(`http://${ip}:5000/api/task`, {
+            task,
+            subject,
+            date: new Date().toISOString().split('T')[0], // Текущая дата
+            party,
+            deadline: formattedDeadline,
+            creator,
+          }, {
+            params: {
+              user_id: id // Добавляем user_id в параметры запроса
+            }
+          });
+
+          Alert.alert("Успех", "Домашнее задание добавлено!", [
+            { text: "OK", onPress: () => navigation.navigate('HomeWork') }
+          ]);
+          
+          // Сброс полей формы
+          setTask("");
+          setSubject("");
+          setDeadline("");
+          setChoiseDate("Выбрать");
+        } catch (error) {
+          console.error("Ошибка при добавлении:", error);
+          Alert.alert(
+            "Ошибка", 
+            error.response?.data?.error || "Не удалось добавить задание"
+          );
+        }
       };
-
-    axios
-      .post(`http://${ip}:5000/api/task`, { task, subject, date, party, deadline, creator })
-      .then((response) => {
-        Alert.alert("Успех", "Домашнее задание добавлено!", [
-          { text: "OK", onPress: () => navigation.navigate('HomeWork') }
-      ]);
-        setTask("");
-        setSubject("");
-        setDate("");
-        setDeadline("");
-        setCreator("");
-      })
-      .catch((error) => {
-        console.error("Ошибка при добавлении:", error);
-        Alert.alert("Ошибка", "Не удалось добавить задание.");
-      });
-  };
 
   const [selectedValue, setSelectedValue] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -158,9 +168,9 @@ export default function AddHomeWork({ navigation }) {
 
      <Modal visible={modalVisibleDate} transparent={true} animationType="fade">
           <View style={styles.modalContainer}>
-            <TouchableWithoutFeedback onPress={() => setModalVisibleDate(false)}>
+            <TouchableOpacity onPress={() => setModalVisibleDate(true)}>
               <View style={StyleSheet.absoluteFill} />
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
             
            <View style={[styles.modal, styles.modalCalendar]}>
               <View style={{ width: '100%' }}>

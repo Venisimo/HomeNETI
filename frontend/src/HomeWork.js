@@ -21,13 +21,13 @@ const groupTasksByDate = (tasks) => {
 let role = 1;
 
 // Получение задач
-const useTasks = () => {
+const useTasks = (party, user_id) => {
   const [tasksByDate, setTasksByDate] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     axios.get(`http://${ip}:5000/api/homeWorkGet`, {
-      params: { party: 'AVT-414' }
+      params: { party, user_id }
     })
       .then(response => {
         const grouped = groupTasksByDate(response.data);
@@ -39,7 +39,7 @@ const useTasks = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [party, user_id]);
 
   return { tasksByDate, isLoading };
 };
@@ -163,12 +163,14 @@ const WithoutDeadline = ({ tasksByDate, isLoading }) => {
 };
 
 export default function TabHomeWork() {
+  const party = 'AVT-414';
+  const user_id = 1;
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'first', title: 'Со сроком' },
     { key: 'second', title: 'Без срока' },
   ]);
-  const { tasksByDate, isLoading } = useTasks();
+  const { tasksByDate, isLoading } = useTasks(party, user_id);
 
   return (
     <View style={{ flex: 1 }}>

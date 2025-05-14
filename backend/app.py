@@ -192,7 +192,7 @@ def settask():
         subject = data["subject"]
         date = data["date"]
         party = data["party"]
-        deadline = data.get("deadline") if data.get("deadline") else None
+        deadline = data.get("deadline") if data.get("deadline") not in [None, "", "Выбрать"] else None
         creator = data["creator"]
         
         cur.execute("""
