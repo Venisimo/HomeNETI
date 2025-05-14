@@ -176,7 +176,7 @@ export default function AddHomeWork({ navigation }) {
                     setModalVisibleDate(false);
                   }}
                   textStyleOverride={{
-                    defaultFontSize: 12,
+                    defaultFontSize: 10,
                     disabledFontSize: 8,
                     defaultColor: '#222',
                     disabledColor: '#ccc'
